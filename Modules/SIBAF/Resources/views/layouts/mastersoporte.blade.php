@@ -277,7 +277,6 @@
               </div>
             </div>
           </div>
-          
           <div class="col-lg-4">
             <div class="stat-card">
               <div class="d-flex justify-content-between align-items-center">
@@ -291,7 +290,6 @@
               </div>
             </div>
           </div>
-          
           <div class="col-lg-4">
             <div class="stat-card">
               <div class="d-flex justify-content-between align-items-center">
@@ -306,39 +304,7 @@
             </div>
           </div>
         </div>
-
-        <!-- Content Cards -->
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="content-card">
-              <h5 class="content-title">Tickets Recientes</h5>
-              <div class="placeholder-content">
-                <p class="text-center mb-0">El contenido de tickets se implementará más adelante</p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-lg-6">
-            <div class="content-card">
-              <h5 class="content-title">Solicitudes de Baja</h5>
-              <div class="placeholder-content">
-                <p class="text-center mb-0">El contenido de solicitudes se implementará más adelante</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="row">
-          <div class="col-12">
-            <div class="content-card">
-              <h5 class="content-title">Lista de Tickets Pendientes</h5>
-              <div class="placeholder-content">
-                <p class="text-center mb-0">La lista de tickets pendientes se implementará más adelante</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        @yield('content')
     </div>
   </div>
 

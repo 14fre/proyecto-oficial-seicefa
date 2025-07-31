@@ -1,0 +1,13 @@
+{
+    "name": "GPES",
+    "alias": "gpes",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\GPES\\Providers\\GPESServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

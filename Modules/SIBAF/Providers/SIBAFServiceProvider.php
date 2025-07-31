@@ -28,6 +28,9 @@ class SIBAFServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+        
+        // Registrar middleware
+        $this->app['router']->aliasMiddleware('check.computer.status', \Modules\SIBAF\Http\Middleware\CheckComputerStatus::class);
     }
 
     /**

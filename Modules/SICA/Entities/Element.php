@@ -90,6 +90,13 @@ class Element extends Model implements Auditable
         return $this->hasMany(TrainingMaterial::class);
     }
 
+    public function environment() {
+        return $this->belongsTo(Environment::class, 'environment_id');
+    }
+
+    public function computers() {
+        return $this->hasOne(\Modules\GPES\Entities\Computer::class, 'element_id');
+    }
 
     // Configuración de factory para la generación de datos de pruebas
     protected static function newFactory()

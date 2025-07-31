@@ -40,5 +40,12 @@ class MovementTypesTableSeeder extends Seeder
             ['consecutive'=>0]
         );
 
+        // Agregar tipo de movimiento para reporte de daño si no existe
+        \Modules\SICA\Entities\MovementType::firstOrCreate([
+            'name' => 'Reporte de daño',
+        ], [
+            'consecutive' => 0 // O el valor que desees
+        ]);
+
     }
 }

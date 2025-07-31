@@ -36,15 +36,26 @@ class HomeController extends Controller
         }
 
         $apps = App::all();
-        $productiveunit = ProductiveUnit::where('name','=','Punto de venta')->pluck('id');
-        $warehouse = Warehouse::where('name','=','Punto de venta')->pluck('id');
+        // Cambiado: antes pluck('id') devolvía una colección, ahora solo el primer id (valor escalar)
+        $productiveunit = ProductiveUnit::where('name','=','Punto de venta')->pluck('id')->first(); // <-- Solo un id
+        $warehouse = Warehouse::where('name','=','Punto de venta')->pluck('id')->first(); // <-- Solo un id
+        // Ahora la consulta espera y recibe valores escalares, evitando el error de parámetros
+        $productiveunit_warehouse = ProductiveUnitWarehouse::where('productive_unit_id',$productiveunit)
+            ->where('warehouse_id',$warehouse)
+            ->pluck('id')
+            ->first(); // Solo un id
         $kind_of_purchase = KindOfPurchase::where('name','=','Producción de centro')->first();
-        $productiveunit_warehouse = ProductiveUnitWarehouse::where('productive_unit_id',$productiveunit)->where('warehouse_id',$warehouse)->pluck('id');
-        $category = Category::whereHas('elements.inventories', function ($query) use ($productiveunit_warehouse) {
-            $query->where('productive_unit_warehouse_id', $productiveunit_warehouse)->where('amount','>','0');
-        })->whereHas('elements', function ($query) use ($kind_of_purchase) {
-            $query->where('kind_of_purchase_id', $kind_of_purchase->id);
-        })->get();
+
+        $category = collect(); // Por defecto, colección vacía
+        // Solo ejecuta la consulta si ambos valores existen
+        if ($productiveunit_warehouse && $kind_of_purchase) {
+            $category = Category::whereHas('elements.inventories', function ($query) use ($productiveunit_warehouse) {
+                $query->where('productive_unit_warehouse_id', $productiveunit_warehouse)
+                      ->where('amount','>','0');
+            })->whereHas('elements', function ($query) use ($kind_of_purchase) {
+                $query->where('kind_of_purchase_id', $kind_of_purchase->id);
+            })->get();
+        }
         
         $inventory = Inventory::with('element.category')->where('productive_unit_warehouse_id', $productiveunit_warehouse)
             ->whereHas('element', function ($query) use ($kind_of_purchase) {

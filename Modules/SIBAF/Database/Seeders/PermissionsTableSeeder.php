@@ -40,6 +40,21 @@ class PermissionsTableSeeder extends Seeder
         // Asignación de PERMISOS para los ROLES de la aplicación AGROSOFT (Sincronización de las relaciones sin eliminar las relaciones existentes)
         $rol_admin->permissions()->syncWithoutDetaching($permissions_admin);
 
+       // permisos para el rol de inventario
+       $permissions_inventario = [];
+       $permission = Permission::updateOrCreate(['slug' => 'sibaf.inventory.view'], [
+        'name' => 'Ver Inventario de Equipos',
+        'description' => 'Permite al usuario ver el inventario de equipos',
+        'description_english' => 'Allows the user to view the equipment inventory',
+        'app_id' => $app->id
+       ]);      
+       $permissions_inventario[] = $permission->id;
+
+       // Consulta de ROLES
+       $rol_admin = Role::where('slug', 'sibaf.admin')->first(); // Rol admin
+
+       // Asignación de PERMISOS para los ROLES de la aplicación AGROSOFT (Sincronización de las relaciones sin eliminar las relaciones existentes)
+       $rol_admin->permissions()->syncWithoutDetaching($permissions_admin);
 
         // asignación de permisos para el rol de soporte
         $permissions_soporte = []; // Lista de permisos para el rol de soporte  
@@ -66,6 +81,21 @@ class PermissionsTableSeeder extends Seeder
          $rol_soporte->permissions()->syncWithoutDetaching($permissions_soporte);
  
 
-      
+       //asignación de permisos para el rol de instructor
+       $permissions_instructor = []; // Lista de permisos para el rol de instructor
+       $permission = Permission::updateOrCreate(['slug' => 'sibaf.instructor.masterinstructor'], [ // Registro o actualización de permiso
+        'name' => 'Acceso al Rol de instructor',
+        'description' => 'Acceso al Rol de instructor',
+        'description_english' => 'Access to the instructor role',
+        'app_id' => $app->id
+       ]);              
+       $permissions_instructor[] = $permission->id; // Almacenar permiso para rol
+
+       // Consulta de ROLES
+       $rol_instructor = Role::where('slug', 'sibaf.instructor ')->first(); // Rol Instructor
+       $rol_instructor = Role::where('slug', 'sibaf.instructor')->first(); // Rol Instructor
+
+       // Asignación de PERMISOS para los ROLES de la aplicación AGROSOFT (Sincronización de las relaciones sin eliminar las relaciones existentes)
+       $rol_instructor->permissions()->syncWithoutDetaching($permissions_instructor);   
     }
 }

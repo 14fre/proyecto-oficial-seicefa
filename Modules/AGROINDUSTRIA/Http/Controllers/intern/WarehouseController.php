@@ -20,6 +20,7 @@ use Modules\SICA\Entities\WarehouseMovement;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator, Str;
+use Illuminate\Support\Facades\DB;
 
 class WarehouseController extends Controller
 {
@@ -224,12 +225,12 @@ class WarehouseController extends Controller
 
     public function element ($productiveUnitId, $warehouseId){
         $warehouse = ProductiveUnitWarehouse::where('productive_unit_id', $productiveUnitId)
-        ->where('warehouse_id', $warehouseId)
-        ->pluck('id');
+            ->where('warehouse_id', $warehouseId)
+            ->pluck('id');
 
         $elementInventory = Inventory::with('element')
-        ->whereIn('productive_unit_warehouse_id', $warehouse)
-        ->groupBy('element_id')->select('element_id', \DB::raw('SUM(amount) as totalAmount'), \DB::raw('GROUP_CONCAT(price) as prices'))->get();
+            ->whereIn('productive_unit_warehouse_id', $warehouse)
+            ->groupBy('element_id')->select('element_id', DB::raw('SUM(amount) as totalAmount'), DB::raw('GROUP_CONCAT(price) as prices'))->get();
         $element = $elementInventory->map(function ($e) {
             $id = $e->element->id;
             $name = $e->element->name . ' (' . $e->element->measurement_unit->abbreviation . ')';
@@ -244,30 +245,25 @@ class WarehouseController extends Controller
     }
     
     public function dataElement($productiveUnitId, $warehouseId, $elementId){    
-
         $productiveUnitWarehouse = ProductiveUnitWarehouse::where('productive_unit_id', $productiveUnitId)
-        ->where('warehouse_id', $warehouseId)
-        ->pluck('id');
+            ->where('warehouse_id', $warehouseId)
+            ->pluck('id');
 
-        $inventoryElement = Inventory::with('element')->where('productive_unit_warehouse_id', $productiveUnitWarehouse)
-        ->where('element_id', $elementId)
-        ->groupBy('element_id')->select('element_id', \DB::raw('SUM(amount) as totalAmount'), \DB::raw('GROUP_CONCAT(price) as prices') , \DB::raw('MAX(lot_number) as lot'))->get();
-
-        $elementData = $inventoryElement->map(function ($e) {
-            $lote = $e->lot;
-            $fVto = $e->expiration_date;
-            $price = $e->prices;
-            $amount = $e->totalAmount / $e->element->measurement_unit->conversion_factor;
+        $elementInventory = Inventory::with('element')
+            ->whereIn('productive_unit_warehouse_id', $productiveUnitWarehouse)
+            ->where('element_id', $elementId)
+            ->groupBy('element_id')->select('element_id', DB::raw('SUM(amount) as totalAmount'), DB::raw('GROUP_CONCAT(price) as prices'))->get();
+        $element = $elementInventory->map(function ($e) {
+            $id = $e->element->id;
+            $name = $e->element->name . ' (' . $e->element->measurement_unit->abbreviation . ')';
 
             return [
-                'lote' => $lote,
-                'fVto' => $fVto,
-                'price' => $price,
-                'amount' => $amount
+                'id' => $id,
+                'name' => $name,
             ];
         });
-        
-        return response()->json(['id' => $elementData]);
+    
+        return response()->json(['id' => $element]);
     }
 
     public function createDischarge(Request $request) {

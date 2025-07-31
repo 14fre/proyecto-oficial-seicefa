@@ -1,0 +1,44 @@
+
+
+
+              __________   ____          _______                 _______    __________   _______      __    __   _____   _________ 
+   /\  /\    |___    ___| |  __| ____   |   ___  \      / \     /   ____|  |___    ___| |   _   |    /  \  /  / | ____   |  ______|
+  /  \/  \       |  |     | |   |__  |  |  |___|  \    / _ \   /   /           |  |     |  | |  |   /    \/  /  | ____|  |_____   |
+ /  /\/\  \   ___|  |___  | |______| |  |   ___   /   / /_\ \  \   \____    ___|  |___  |  |_|  |  /  /\    /   | |____  ______|  |
+/__/    \__\ |__________| |__________|  |__|   |__|  /__/  \_\  \_______|  |__________| |_______| /__/  \__/    |______| |________|      
+
+ Schema::create('measurement_units', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('abbreviation')->unique();
+            $table->string('minimum_unit_measure');
+            $table->float('conversion_factor', 8, 2);
+            $table->softDeletes();
+            $table->timestamps();
+        });
+
+
+
+   Schema::create('kind_of_purchases', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->text('description');
+            $table->softDeletes();
+            $table->timestamps();
+        });
+
+=======================================================================================================
+  Schema::create('elements', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->foreignId('measurement_unit_id')->constrained()->onDelete('cascade');
+            $table->text('description')->nullable();
+            $table->foreignId('kind_of_purchase_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->integer('price')->nullable();
+            $table->unsignedInteger('UNSPSC_code')->unique()->nullable();
+            $table->string('image')->nullable();
+            $table->string('slug'); // Campo para almacenar url amigable
+            $table->softDeletes();
+            $table->timestamps();
+        });

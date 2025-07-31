@@ -1,0 +1,88 @@
+
+ __    __   _______   __                                      __     __      __    __   _________     _______    
+|  |  |  | |   _   | |  |         / \              /\  /\    |  |   |  |    /  \  /  / |__    __  \  |   _   |  
+|  |__|  | |  | |  | |  |        / _ \            /  \/  \   |  |   |  |   /    \/  /     |  |  \  \ |  | |  | 
+|   __   | |  |_|  | |  | ___   / /_\ \          /  /\/\  \  |  |___|  |  /  /\    /    __|  |__/  / |  |_|  | 
+|__|  |__| |_______| |_______| /__/  \_\        /__/    \__\ |_________| /__/  \__/    |__________/  |_______|  
+
+
+
+============================================
+===========================================================
+
+
+=======================================================================================================
+
+🧩 Nombre del Proyecto:
+GPES – Gestión de Préstamos de Equipos del SENA La Angostura
+
+🧾 Contexto del Proyecto
+
+El proyecto GPES tiene como objetivo crear un entorno virtual cerrado dentro de la sede del SENA La Angostura, con el propósito de gestionar los elementos físicos utilizados en ambientes de formación, tales como:
+
+- Computadores
+
+- Herramientas de laboratorio
+
+- Bienes
+
+- Enseres
+
+
+Al gestionar estos elementos desde una plataforma centralizada, se podrá llevar un control detallado y permanente que facilite diferentes tipos de análisis, entre ellos:
+
+📊 Historial por usuario: Consultar qué elementos han sido utilizados por un aprendiz durante su permanencia en la plataforma SICEFA.
+
+🧾 Historial por elemento: Consultar quiénes han hecho uso de un equipo específico durante los años.
+
+🔍 Responsabilidad en daños: Determinar con mayor certeza quién pudo haber causado daños a un elemento, según su historial de uso.
+
+📦 Control de préstamos: Gestionar los préstamos a corto y largo plazo, incluyendo lugar de uso, persona responsable y estado del elemento.
+
+✅ Información actualizada: Conocer en tiempo real qué elementos están disponibles, asignados o dañados.
+
+✅ Requerimientos Funcionales
+
+Gestión de elementos:
+
+El cuentadante podrá registrar, actualizar y eliminar elementos del inventario institucional.
+
+Asignación de equipos:
+El instructor podrá asignar equipos a aprendices según el programa de formación o de manera temporal por jornada diaria.
+
+Consulta de historial por equipo:
+El instructor y el vigilante podrán consultar el historial completo de uso de un equipo.
+
+Consulta de historial por usuario:
+El propio aprendiz o el instructor podrá visualizar el historial de préstamos del aprendiz.
+
+Estados de los equipos:
+Los equipos tendrán distintos estados: Disponible, Asignado o Dañado, lo que permitirá un control más preciso.
+
+Notificaciones de préstamo:
+El sistema enviará notificaciones automáticas al vigilante cada vez que un equipo sea prestado.
+
+Reportes de daño:
+Los usuarios podrán reportar daños en los equipos, y esta notificación será enviada automáticamente al vigilante o cuentadante.
+
+⚙️ Requerimientos No Funcionales
+Integración con la base de datos SICEFA:
+El sistema debe utilizar la estructura de base de datos ya existente en la plataforma SICEFA para mantener coherencia y compatibilidad.
+
+Uso de AJAX para peticiones asíncronas:
+Para mejorar la experiencia del usuario, se emplearán tecnologías asincrónicas en el frontend, minimizando recargas de página.
+
+Disponibilidad como API REST:
+El sistema deberá permitir que sus funcionalidades puedan ser consumidas como una API para futuras integraciones o sistemas externos.
+
+(Puedes agregar aquí un cuarto requerimiento si deseas: rendimiento, seguridad, usabilidad, compatibilidad, etc.)
+Ejemplo:
+Autenticación segura:
+El sistema debe contar con mecanismos de autenticación seguros y control de accesos por roles.
+
+
+
+	
+
+
+

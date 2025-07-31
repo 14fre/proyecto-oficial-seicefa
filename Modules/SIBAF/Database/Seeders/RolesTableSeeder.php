@@ -33,10 +33,23 @@ class RolesTableSeeder extends Seeder
             'app_id' => $app->id
         ]);
 
-        $usersoporte = User::where('nickname', 'FREIMAR14')->firstOrFail();
+        $usersoporte= User::where('nickname', 'FREIMAR14')->firstOrFail();
 
         $usersoporte->roles()->syncWithoutDetaching([$rolsoporte->id]);
+        //instructor
+        $rolinstructor = Role::updateOrCreate(['slug' => 'sibaf.instructor'], [
+            'name' => 'instructor',
+            'description' => 'Rol de instructor de la aplicación SIBAFT',
+            'description_english' => ' SIBAFT application instructor role',
+            'full_access' => 'No',
+            'app_id' => $app->id
+        ]);
+
+            $userinstructor = User::where('nickname', 'FRE1345')->firstOrFail();
+
+        $userinstructor->roles()->syncWithoutDetaching([$rolinstructor->id]);
     }
+
     
 
     

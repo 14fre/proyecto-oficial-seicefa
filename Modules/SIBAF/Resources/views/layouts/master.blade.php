@@ -206,41 +206,31 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">
+                            <a href="{{ route('sibaf.admin.welcome') }}" class="nav-link {{ Route::is('sibaf.admin.welcome') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-arrow-down"></i>
-                                <p>Dar de Baja Equipos</p>
+                            <a href="{{ route('sibaf.admin.notifications') }}" class="nav-link {{ Route::is('sibaf.admin.notifications*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-bell"></i>
+                                <p>Notificaciones</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt"></i>
-                                <p>Reportes de Daños</p>
+                            <a href="{{ route('sibaf.admin.downgrades') }}" class="nav-link {{ Route::is('sibaf.admin.downgrades*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-laptop"></i>
+                                <p>Bajas Aprobadas</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('admin.sibaf.inventory.index') }}" class="nav-link {{ Route::is('admin.sibaf.inventory.index') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-desktop"></i>
                                 <p>Inventario de Equipos</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p>Usuarios</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-cog"></i>
-                                <p>Configuración</p>
-                            </a>
-                        </li>
+                        
+                        
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-question-circle"></i>
@@ -252,95 +242,26 @@
                 <!-- /.sidebar-menu -->
             </div>
         </aside>
-
+        
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Main content -->
             <section class="content">
                 <div class="container-fluid">
+                    <!-- Aquí debe ir el contenido dinámico de cada vista -->
+                    @yield('content')
+                    
+                    <!-- Contenido del dashboard principal (solo para welcome) -->
+                    @if(Route::is('sibaf.admin.welcome'))
                     <div class="row mt-4">
                         <div class="col-md-12">
-                            <div class="input-group mb-4">
-                                <input type="text" class="form-control" placeholder="Buscar...">
-                                <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
-                            </div>
+                            
                         </div>
                     </div>
 
-                    <!-- Action Buttons -->
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <button class="btn btn-primary w-100 header-button" style="background-color: #0d2042;">
-                                <i class="fas fa-plus-circle"></i> Nueva Solicitud de Baja
-                            </button>
-                        </div>
-                        <div class="col-md-4">
-                            <button class="btn btn-info w-100 header-button">
-                                <i class="fas fa-file-alt"></i> Nuevo Reporte de Daño
-                            </button>
-                        </div>
-                        <div class="col-md-4">
-                            <button class="btn btn-success w-100 header-button">
-                                <i class="fas fa-paper-plane"></i> Enviar a Mesa de Ayuda
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Info Boxes -->
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="card card-dashboard bg-white">
-                                <h1>12</h1>
-                                <p>Solicitudes Pendientes</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card card-dashboard bg-white">
-                                <h1>24</h1>
-                                <p>Reportes Enviados</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card card-dashboard bg-white">
-                                <h1>18</h1>
-                                <p>Reportes Procesados</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Main Content Table - Vacío para llenar dinámicamente -->
-                    <div class="card mt-4">
-                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <h3 class="card-title">Solicitudes de Baja de Equipos</h3>
-                            <div>
-                                <button class="btn btn-sm btn-outline-secondary me-2">
-                                    <i class="fas fa-filter"></i> Filtrar
-                                </button>
-                                <button class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-file-export"></i> Exportar
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body p-0">
-                            <!-- Aquí se cargarán dinámicamente los datos -->
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Equipo</th>
-                                        <th>Solicitante</th>
-                                        <th>Motivo</th>
-                                        <th>Fecha</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Esta área se llenará dinámicamente -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    
+                    
+                    @endif
                 </div>
             </section>
         </div>
