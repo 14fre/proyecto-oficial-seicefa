@@ -34,4 +34,11 @@ class DamageReport extends Model
     {
         return $this->belongsTo(\Modules\SICA\Entities\Movement::class, 'movement_id');
     }
+
+    public function damageReports()
+{
+    return $this->hasMany(DamageReport::class, 'inventory_id');
+}
+
+    
 } 

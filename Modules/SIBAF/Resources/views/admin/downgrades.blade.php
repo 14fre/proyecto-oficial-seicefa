@@ -1,6 +1,9 @@
+
+
 @extends('sibaf::layouts.master')
 
 @section('content')
+<link rel="stylesheet" href="{{ asset('modules/sibaf/css/downgrades.css') }}">
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -143,20 +146,7 @@
     </div>
 </div>
 
-<style>
-.table th {
-    background-color: #f8f9fc;
-    border-top: none;
-}
 
-.btn-group .btn {
-    margin-right: 2px;
-}
-
-.badge {
-    font-size: 0.8em;
-}
-</style>
 
 <script>
 function showDowngradeDetails(downgradeId) {

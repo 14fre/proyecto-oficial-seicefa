@@ -1,0 +1,188 @@
+/* Paleta de colores */
+:root {
+    --primary-blue: #0A2342;        /* Azul oscuro principal */
+    --secondary-blue: #164069;      /* Azul oscuro para elementos secundarios */
+    --background-light: #f0f2f5;    /* Fondo claro para contraste */
+    --card-background: #ffffff;     /* Fondo de tarjetas blanco */
+    --text-dark: #333333;           /* Texto oscuro para legibilidad */
+    --border-light: #e0e0e0;        /* Borde claro */
+    --success-green: #28a745;       /* Verde para éxito */
+    --info-blue: #17a2b8;           /* Azul para información */
+    --secondary-gray: #6c757d;      /* Gris para botones secundarios */
+}
+
+/* Estilos generales */
+body {
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.h3.text-gray-800 {
+    color: var(--primary-blue) !important;
+    font-weight: 600;
+}
+
+.card {
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background-color: var(--card-background);
+    border: 1px solid var(--border-light);
+}
+
+.card-header {
+    background-color: var(--secondary-blue);
+    color: #fff;
+    font-weight: bold;
+    padding: 1rem 1.5rem;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+    border-bottom: none;
+}
+
+.card-title, .card-header .text-primary {
+    color: #fff !important;
+}
+
+/* Estilo de la tabla */
+.table {
+    color: var(--text-dark);
+}
+
+.table th, .table td {
+    border-top: 1px solid var(--border-light);
+}
+
+.thead-dark th {
+    background-color: #f8f9fa; /* Fondo blanco */
+    border-bottom: 2px solid var(--border-light);
+    color: var(--text-dark);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f8f9fa;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilo de los badges de estado */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.5em 0.8em;
+    border-radius: 50px;
+    font-weight: 500;
+}
+
+.badge-success { background-color: var(--success-green); color: #fff; }
+
+/* Estilo de los botones */
+.btn-secondary {
+    background-color: var(--secondary-gray);
+    border-color: var(--secondary-gray);
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+.btn-group .btn {
+    margin-right: 2px;
+}
+
+.btn-outline-primary {
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    transition: all 0.3s ease;
+}
+.btn-outline-primary:hover {
+    background-color: var(--primary-blue);
+    color: #fff;
+}
+
+.btn-outline-success {
+    color: var(--success-green);
+    border-color: var(--success-green);
+    transition: all 0.3s ease;
+}
+.btn-outline-success:hover {
+    background-color: var(--success-green);
+    color: #fff;
+}
+
+.btn-info {
+    background-color: var(--info-blue);
+    border-color: var(--info-blue);
+    color: #fff;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+/* Estilo de la paginación */
+.pagination .page-item .page-link {
+    background-color: var(--card-background);
+    border-color: var(--border-light);
+    color: var(--text-dark);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #b0b0b0;
+}
+
+/* Estilo de los modales */
+.modal-content {
+    background: var(--card-background);
+    color: var(--text-dark);
+    border-radius: 12px;
+}
+
+.modal-header {
+    background-color: var(--primary-blue);
+    color: #fff;
+    border-bottom: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.modal-header .close {
+    color: #fff;
+    opacity: 1;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-light);
+}
+
+.text-muted {
+    color: #999 !important;
+}
+
+.text-center.py-5 i {
+    color: var(--border-light) !important;
+}

@@ -1,156 +1,178 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Panel de Usuario - Sistema de Gestión</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Panel de Instructor | Sistema de Gestión @yield('title')</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.0/css/OverlayScrollbars.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+
     <style>
-        body {
-            background-color: #f4f6f9;
+        .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active, .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
+            background-color: rgba(255,255,255,.1);
+            color: #fff;
         }
-        .admin-blue {
-            background-color: #0A2E5C;
-        }
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 50;
-        }
-        .dropdown-menu.show {
-            display: block;
+
+        /* Color de fondo del sidebar */
+        .main-sidebar.sidebar-dark-primary {
+            background-color: #0d2042 !important;
         }
     </style>
 </head>
-<body class="min-h-screen bg-gray-100">
-    <div class="flex">
-        <!-- Sidebar -->
-        <div class="w-64 admin-blue text-white h-screen p-6">
-            <div class="flex items-center mb-10">
-                <img src="/api/placeholder/50/50" alt="Logo" class="w-12 h-12 mr-3 rounded-full">
-                <h2 class="text-xl font-bold">Sistema de Gestión</h2>
-            </div>
-            
-            <nav>
-                <ul class="space-y-3">
-                    <li>
-                        <a href="#" class="flex items-center p-3 hover:bg-blue-700 rounded-lg">
-                            <i class="ri-dashboard-line mr-3"></i>
-                            Panel Principal
-                        </a>
-                    </li>
-                    <a href="{{ route('admin.sibaf.inventory.index') }}" class="nav-link {{ Route::is('admin.sibaf.inventory.index') ? 'active' : '' }}">
-                        <i class="ri-archive-line mr-3"></i>
-                        Ver Inventario
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="#" class="nav-link">Panel de Instructor</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                    <i class="fas fa-search"></i>
+                </a>
+                <div class="navbar-search-block">
+                    <form class="form-inline">
+                        <div class="input-group input-group-sm">
+                            <input class="form-control form-control-navbar" type="search" placeholder="Buscar..." aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-navbar" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#">
+                    <i class="far fa-bell"></i>
+                    <span class="badge badge-warning navbar-badge">3</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    <span class="dropdown-item dropdown-header">3 Notificaciones</span>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-envelope mr-2"></i> Nuevo mensaje
+                        <span class="float-right text-muted text-sm">3 mins</span>
                     </a>
-                    
-                    <li>
-                        <a href="#" class="flex items-center p-3 hover:bg-blue-700 rounded-lg">
-                            <i class="ri-error-warning-line mr-3"></i>
-                            Reportar Daño
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item dropdown-footer">Ver todas las notificaciones</a>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown user-menu">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="d-none d-md-inline">{{ Auth::user()->nickname ?? 'Usuario' }}</span>
+                </a>
+                <!-- Simplificado el menú de cerrar sesión, quitado color azul y hecho más pequeño -->
+                <ul class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                    <li class="user-header text-center py-2" style="background: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                        <i class="fas fa-user-circle text-muted" style="font-size: 2rem;"></i>
+                        <p class="mt-1 mb-0 text-dark">
+                            {{ Auth::user()->nickname ?? 'Usuario' }}
+                            <small class="text-muted">Instructor</small>
+                        </p>
+                    </li>
+                    <li class="user-footer text-center py-2">
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <a href="#" onclick="this.closest('form').submit(); return false;" class="text-muted" style="text-decoration: none; font-size: 0.9rem;">
+                                <i class="fas fa-sign-out-alt mr-1"></i> Cerrar Sesión
+                            </a>
+                        </form>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <!-- Agregué icono de sistema de gestión (teléfono) -->
+        <a href="#" class="brand-link">
+            <i class="fas fa-phone-alt brand-image img-circle elevation-3" style="opacity: .8; margin-left: 10px; margin-right: 10px;"></i>
+            <span class="brand-text font-weight-light">Sistema de Gestión</span>
+        </a>
+
+        <div class="sidebar">
+            <!-- Cambié la imagen por un icono de panel -->
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
+                    <i class="fas fa-user-tie img-circle elevation-2" style="font-size: 2.1rem; color: #fff; background: #007bff; padding: 0.5rem; border-radius: 50%; width: 2.1rem; height: 2.1rem; display: flex; align-items: center; justify-content: center;"></i>
+                </div>
+                <div class="info">
+                    <a href="#" class="d-block">{{ Auth::user()->nickname ?? 'Usuario' }}</a>
+                </div>
+            </div>
+
+            <!-- Solo dejé las 3 opciones solicitadas con iconos apropiados para instructor -->
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-item">
+                        <a href="{{ route('sibaf.instructor.masterinstructor') }}" class="nav-link {{ Route::is('sibaf.instructor.masterinstructor') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-chalkboard-teacher"></i>
+                            <p>Panel Principal</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="#" class="flex items-center p-3 hover:bg-blue-700 rounded-lg">
-                            <i class="ri-tools-line mr-3"></i>
-                            Solicitar Reparación
+                    <li class="nav-item">
+                        <a href="{{ route('sibaf.instructor.inventory.index') }}" class="nav-link {{ Route::is('sibaf.instructor.inventory.index') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-clipboard-list"></i>
+                            <p>Inventario de Equipos</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="#" class="flex items-center p-3 hover:bg-blue-700 rounded-lg">
-                            <i class="ri-history-line mr-3"></i>
-                            Historial de Reportes
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-cog"></i>
+                            <p>Configuración</p>
                         </a>
                     </li>
                 </ul>
             </nav>
         </div>
+    </aside>
 
-        <!-- Main Content -->
-        <div class="flex-1">
-            <!-- Top Bar -->
-            <div class="admin-blue text-white p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                    <select class="bg-transparent border-white border rounded-lg p-2 mr-4">
-                        <option>🇪🇸 Español</option>
-                        <option>🇬🇧 English</option>
-                        <option>🇫🇷 Français</option>
-                        <option>🇩🇪 Deutsch</option>
-                    </select>
-                    <input type="text" placeholder="Buscar..." class="p-2 rounded-lg text-black">
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <!-- Notificaciones -->
-                    <div class="relative">
-                        <button class="p-2 hover:bg-blue-700 rounded-lg">
-                            <i class="ri-notification-line text-2xl"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-                        </button>
-                    </div>
-
-                    <!-- Perfil de Usuario -->
-                    <div class="relative">
-                        <button onclick="toggleDropdown()" class="flex items-center space-x-2 hover:bg-blue-700 p-2 rounded-lg">
-                            <img src="/api/placeholder/40/40" alt="Usuario" class="w-10 h-10 rounded-full">
-                            <div class="text-left">
-                                <p class="font-semibold">Juan Pérez</p>
-                                <p class="text-sm">Técnico</p>
-                            </div>
-                            <i class="ri-arrow-down-s-line"></i>
-                        </button>
-
-                        <!-- Menú Desplegable -->
-                        <div id="userDropdown" class="dropdown-menu w-48 mt-2">
-                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                <i class="ri-user-line mr-2"></i>Mi Perfil
-                            </a>
-                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                <i class="ri-settings-line mr-2"></i>Configuración
-                            </a>
-                            <div class="border-t border-gray-200"></div>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
-                                    <i class="ri-logout-box-line mr-2"></i>Cerrar Sesión
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dashboard Content -->
-            <div class="p-6">
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="container-fluid">
                 @yield('content')
             </div>
-
-        </div>
+        </section>
     </div>
 
-    <script>
-        function toggleDropdown() {
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.classList.toggle('show');
-        }
+    <footer class="main-footer">
+        <strong>Sistema de Gestión &copy; 2023.</strong>
+        Todos los derechos reservados.
+    </footer>
 
-        // Cerrar el dropdown cuando se hace clic fuera
-        window.onclick = function(event) {
-            if (!event.target.matches('button')) {
-                const dropdowns = document.getElementsByClassName("dropdown-menu");
-                for (let i = 0; i < dropdowns.length; i++) {
-                    const openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        }
-    </script>
+    <aside class="control-sidebar control-sidebar-dark"></aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.0/js/jquery.overlayScrollbars.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 </body>
 </html>

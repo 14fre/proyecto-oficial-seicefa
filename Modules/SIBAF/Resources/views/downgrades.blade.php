@@ -1,6 +1,7 @@
 @extends('sibaf::layouts.master')
 
 @section('content')
+<link rel="stylesheet" href="{{ asset('modules/sibaf/css/downgrades.css') }}">
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">

@@ -1,0 +1,491 @@
+/*
+ * Estilos Generales y Variables
+ * Se utiliza una paleta de colores moderna con un azul profundo y profesional,
+ * junto con grises suaves para el texto y el fondo.
+ */
+:root {
+    --primary-blue: #007bff; /* Un azul estándar y fuerte para acentos */
+    --dark-blue: #0a3d62; /* Un azul profundo y profesional para el texto principal */
+    --light-blue: #e9f5ff; /* Un azul muy claro para fondos de hover */
+    --text-color: #343a40; /* Gris oscuro para el texto principal */
+    --secondary-text-color: #6c757d; /* Gris más claro para el texto secundario */
+    --background-light: #f8f9fa; /* Un fondo limpio y claro */
+    --background-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --border-color: #dee2e6;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text-color);
+}
+
+.dashboard-container {
+    padding: 30px; /* Mayor espaciado general */
+    background: var(--background-gradient);
+    min-height: 100vh;
+}
+
+/*
+ * Estilos del Encabezado
+ * El encabezado tiene un diseño más limpio y elevado.
+ */
+.dashboard-header {
+    background: white;
+    border-radius: 16px; /* Borde más pronunciado */
+    padding: 32px; /* Mayor padding */
+    margin-bottom: 30px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-header:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.dashboard-title {
+    font-size: 2.8rem; /* Título más grande para mayor impacto */
+    font-weight: 700;
+    color: var(--dark-blue); /* Usando el azul oscuro */
+    margin: 0;
+    line-height: 1.2;
+    /* Se elimina el degradado de texto para un aspecto más limpio y formal */
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    background-clip: unset;
+}
+
+.dashboard-subtitle {
+    color: var(--secondary-text-color);
+    font-size: 1.1rem;
+    margin: 8px 0 0 0;
+}
+
+.dashboard-breadcrumb {
+    text-align: right;
+    font-size: 0.95rem;
+}
+
+.breadcrumb-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-link:hover {
+    color: var(--dark-blue);
+}
+
+.breadcrumb-separator {
+    margin: 0 10px;
+    color: var(--secondary-text-color);
+}
+
+.breadcrumb-current {
+    color: var(--secondary-text-color);
+    font-weight: 600;
+}
+
+/*
+ * Cuadrícula de Estadísticas
+ * Las tarjetas son más destacadas con una sombra más fuerte y un diseño más limpio.
+ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Bordes de colores más claros */
+.stat-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    border-radius: 16px 16px 0 0;
+    background: var(--primary-blue);
+}
+
+.stat-card-warning::before {
+    background: #ffc107;
+}
+.stat-card-success::before {
+    background: #28a745;
+}
+.stat-card-info::before {
+    background: #17a2b8;
+}
+.stat-card-danger::before {
+    background: #dc3545;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 3rem; /* Números más grandes */
+    font-weight: 700;
+    color: var(--dark-blue);
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    color: var(--secondary-text-color);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.stat-icon {
+    font-size: 3rem; /* Iconos más grandes */
+    opacity: 0.2;
+    color: var(--dark-blue);
+}
+
+/*
+ * Cuadrícula de Contenido
+ * Mantenemos el diseño de la cuadrícula, pero con espaciado mejorado.
+ */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+/* Tarjetas de Contenido */
+.content-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.content-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.content-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.card-header {
+    padding: 20px 30px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--background-light);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark-blue);
+}
+
+.card-title i {
+    color: var(--primary-blue);
+    font-size: 1.5rem;
+}
+
+.btn-primary-small {
+    background: var(--primary-blue);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-primary-small:hover {
+    background: var(--dark-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+/*
+ * Ítems de Notificación y Reportes
+ * Efecto de hover más sutil y un borde izquierdo limpio.
+ */
+.notification-item,
+.report-item {
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+    border-left: 5px solid var(--primary-blue);
+    background: var(--background-light);
+}
+
+.notification-item:hover,
+.report-item:hover {
+    background: var(--light-blue); /* Un color de hover más sutil */
+    transform: translateX(8px);
+}
+
+.notification-item:last-child,
+.report-item:last-child {
+    margin-bottom: 0;
+}
+
+.notification-header,
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.notification-title,
+.report-title {
+    color: var(--dark-blue);
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.notification-time,
+.report-time {
+    color: var(--secondary-text-color);
+    font-size: 0.85rem;
+}
+
+.notification-description,
+.report-description {
+    color: var(--text-color);
+    font-size: 0.95rem;
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.notification-user,
+.report-user {
+    color: var(--secondary-text-color);
+    font-size: 0.85rem;
+}
+
+/* Estado Vacío */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--secondary-text-color);
+}
+
+.empty-state i {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    opacity: 0.4;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/*
+ * Estilos de Tabla
+ * La tabla tiene un diseño más limpio y profesional.
+ */
+.table-container {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: separate; /* Usar 'separate' para el borde redondeado */
+    border-spacing: 0;
+    font-size: 0.95rem;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.data-table th {
+    background: var(--dark-blue);
+    color: white;
+    font-weight: 600;
+    padding: 16px 12px;
+    text-align: left;
+}
+
+.data-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.data-table tr:hover {
+    background: var(--background-light);
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.equipment-name,
+.user-name {
+    font-weight: 600;
+    color: var(--dark-blue);
+}
+
+.approval-date {
+    color: var(--secondary-text-color);
+}
+
+.documents {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-download {
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-download-primary {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.btn-download-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    color: white;
+    text-decoration: none;
+}
+
+/*
+ * Diseño Responsivo
+ * Se mejoran los puntos de quiebre para una mejor experiencia móvil.
+ */
+@media (max-width: 992px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 20px;
+    }
+    .dashboard-header {
+        padding: 24px;
+        text-align: center;
+    }
+    .dashboard-title {
+        font-size: 2.2rem;
+    }
+    .dashboard-subtitle {
+        font-size: 1rem;
+    }
+    .dashboard-breadcrumb {
+        text-align: center;
+        margin-top: 16px;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+    }
+    .stat-card {
+        padding: 20px;
+    }
+    .stat-number {
+        font-size: 2.5rem;
+    }
+    .content-grid {
+        gap: 20px;
+    }
+    .card-header {
+        padding: 16px;
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    .card-title {
+        font-size: 1.1rem;
+    }
+    .card-body {
+        padding: 20px;
+    }
+    .documents {
+        flex-direction: column;
+        gap: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-title {
+        font-size: 2rem;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .notification-header,
+    .report-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    .stat-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 20px;
+    }
+    .stat-content {
+        order: 2;
+    }
+    .stat-icon {
+        order: 1;
+        margin-bottom: 10px;
+    }
+}

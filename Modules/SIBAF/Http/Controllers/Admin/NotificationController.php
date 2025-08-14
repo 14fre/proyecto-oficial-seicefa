@@ -2,40 +2,53 @@
 
 namespace Modules\SIBAF\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Modules\SIBAF\Entities\Notification;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
     public function index()
     {
         $notifications = Notification::with(['user', 'responsibleAllocation'])
+            ->where('user_id', Auth::id()) // <-- AGREGADO
+            ->where('created_at', '>=', Carbon::now()->subDays(2))
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->limit(5)
+            ->get();
 
-        return view('sibaf::notifications', compact('notifications'));
+        return response()->json($notifications);
     }
 
     public function markAsRead($id)
     {
-        $notification = Notification::findOrFail($id);
-        $notification->markAsRead();
-
+        $notification = Notification::where('id', $id)
+            ->where('user_id', Auth::id()) // <-- AGREGADO
+            ->firstOrFail();
+        $notification->statusNotification = 'seen';
+        $notification->save();
+        
         return response()->json(['success' => true]);
     }
 
     public function markAllAsRead()
     {
-        Notification::where('statusNotification', 'pending')->update(['statusNotification' => 'seen']);
+        Notification::where('user_id', Auth::id()) // <-- AGREGADO
+            ->where('statusNotification', 'pending')
+            ->where('created_at', '>=', Carbon::now()->subDays(2))
+            ->update(['statusNotification' => 'seen']);
 
         return response()->json(['success' => true]);
     }
 
     public function getUnreadCount()
     {
-        $count = Notification::where('statusNotification', 'pending')->count();
+        $count = Notification::where('user_id', Auth::id()) // <-- AGREGADO
+            ->where('statusNotification', 'pending')
+            ->where('created_at', '>=', Carbon::now()->subDays(2))
+            ->count();
 
         return response()->json(['count' => $count]);
     }
@@ -43,7 +56,8 @@ class NotificationController extends Controller
     public function getRecent()
     {
         $notifications = Notification::with(['user', 'responsibleAllocation'])
-            ->where('statusNotification', 'pending')
+            ->where('user_id', Auth::id()) // <-- AGREGADO
+            ->where('created_at', '>=', Carbon::now()->subDays(2))
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
@@ -53,7 +67,9 @@ class NotificationController extends Controller
 
     public function destroy($id)
     {
-        $notification = Notification::findOrFail($id);
+        $notification = Notification::where('id', $id)
+            ->where('user_id', Auth::id()) // <-- AGREGADO
+            ->firstOrFail();
         $notification->delete();
 
         return response()->json(['success' => true]);
@@ -61,8 +77,11 @@ class NotificationController extends Controller
 
     public function destroyAllRead()
     {
-        Notification::where('statusNotification', 'seen')->delete();
+        Notification::where('user_id', Auth::id()) // <-- AGREGADO
+            ->where('statusNotification', 'seen')
+            ->where('created_at', '>=', Carbon::now()->subDays(2))
+            ->delete();
 
         return response()->json(['success' => true]);
     }
-} 
+}

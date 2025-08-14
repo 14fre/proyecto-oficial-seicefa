@@ -1,0 +1,201 @@
+/* Paleta de colores */
+:root {
+    --primary-blue: #0A2342;        /* Azul oscuro principal */
+    --secondary-blue: #164069;      /* Azul oscuro para elementos secundarios */
+    --background-dark: #f0f2f5;     /* Fondo claro para contraste */
+    --card-background: #ffffff;     /* Fondo de tarjetas blanco */
+    --text-dark: #333333;           /* Texto oscuro para legibilidad */
+    --border-light: #e0e0e0;        /* Borde claro */
+    --success-green: #28a745;       /* Verde para éxito */
+    --warning-yellow: #ffc107;      /* Amarillo para advertencia */
+    --danger-red: #dc3545;          /* Rojo para peligro */
+}
+
+/* Estilos generales */
+body {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.content-header h1 {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+/* Estilo de la tarjeta principal */
+.card {
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background-color: var(--card-background);
+    border: 1px solid var(--border-light);
+}
+
+.card-header {
+    border-bottom: 1px solid var(--border-light);
+    background-color: #f8f9fa;
+    color: var(--primary-blue);
+    font-weight: bold;
+    padding: 1rem 1.5rem;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+}
+
+.card-title {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+/* Estilo de los formularios y filtros */
+.form-control {
+    background-color: #f8f9fa;
+    border: 1px solid var(--border-light);
+    color: var(--text-dark);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(10, 35, 66, 0.25);
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #081e3a;
+    border-color: #081e3a;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+/* Estilo de la tabla */
+.table {
+    color: var(--text-dark);
+}
+
+.thead-dark th {
+    background-color: var(--secondary-blue);
+    border-color: #0A2342;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilo de los badges de estado */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.5em 0.8em;
+    border-radius: 50px;
+    font-weight: 500;
+}
+
+.badge-success { background-color: var(--success-green); color: #fff; }
+.badge-warning { background-color: var(--warning-yellow); color: #212529; }
+.badge-danger { background-color: var(--danger-red); color: #fff; }
+
+/* Estilo de los botones de acción */
+.btn-info, .btn-danger, .btn-secondary {
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-info { background-color: var(--primary-blue); border-color: var(--primary-blue); }
+.btn-info:hover { background-color: #081e3a; border-color: #081e3a; }
+
+.btn-danger { background-color: var(--danger-red); border-color: var(--danger-red); }
+.btn-danger:hover { background-color: #c82333; border-color: #bd2130; }
+
+.btn-secondary { background-color: #6c757d; border-color: #6c757d; }
+.btn-secondary:hover { background-color: #5a6268; border-color: #545b62; }
+
+/* Estilo de la paginación */
+.pagination .page-item .page-link {
+    background-color: var(--card-background);
+    border-color: var(--border-light);
+    color: var(--text-dark);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #b0b0b0;
+}
+
+/* Estilo de los modales */
+.modal-content {
+    background: var(--card-background);
+    color: var(--text-dark);
+    border-radius: 12px;
+}
+
+.modal-header, .modal-footer {
+    border-color: var(--border-light);
+}
+
+.modal-header {
+    background-color: var(--primary-blue);
+    color: #fff;
+    border-bottom: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.modal-header .close {
+    color: #fff;
+    opacity: 1;
+}
+
+.btn-outline-light {
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-light:hover {
+    background-color: #e9ecef;
+    color: var(--text-dark);
+}
+
+.font-weight-bold {
+    font-weight: 600;
+}
+
+/* Ajustes para iconos y espaciado */
+.table th i,
+.table td i {
+    margin-right: 5px;
+}
+
+.btn-tool {
+    color: #fff;
+}

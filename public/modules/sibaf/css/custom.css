@@ -1,0 +1,7 @@
+.card-primary.card-outline {
+    border-top: 3px solid #007bff;
+}
+.table thead th {
+    background-color: #343a40;
+    color: #ffffff;
+}

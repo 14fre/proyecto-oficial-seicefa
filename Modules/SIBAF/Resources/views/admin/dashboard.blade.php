@@ -1,4 +1,4 @@
-@extends('sibaf::layouts.master')
+{{-- @extends('sibaf::layouts.master')
 
 @section('content')
 <div class="container-fluid">
@@ -198,4 +198,4 @@
     margin: -10px;
 }
 </style>
-@endsection 
+@endsection  --}}

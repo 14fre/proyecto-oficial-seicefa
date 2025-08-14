@@ -8,12 +8,19 @@ class Notification extends Model
 {
     protected $table = 'notifications';
     
+    // ASEGÚRATE DE QUE 'data' ESTÁ EN ESTA LISTA
     protected $fillable = [
-        'id', 'responsible_allocation_id', 'user_id', 'statusNotification', 
-        'notifiable_type', 'notifiable_id', 'created_at', 'updated_at'
+        'responsible_allocation_id', 
+        'user_id', 
+        'statusNotification', 
+        'notifiable_type', 
+        'notifiable_id', 
+        'data'
     ];
 
+    // ASEGÚRATE DE QUE 'data' ESTÁ EN ESTA LISTA DE CASTS
     protected $casts = [
+        'data' => 'array',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -62,4 +69,4 @@ class Notification extends Model
     {
         return $this->statusNotification === 'pending';
     }
-} 
+}

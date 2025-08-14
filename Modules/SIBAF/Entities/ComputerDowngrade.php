@@ -22,6 +22,11 @@ class ComputerDowngrade extends Model
         'fecha_aprobacion',
     ];
 
+    // Añadir casts para convertir fecha_aprobacion a datetime
+    protected $casts = [
+        'fecha_aprobacion' => 'datetime',
+    ];
+
     public function inventory()
     {
         return $this->belongsTo(SIBAFInventory::class, 'inventory_id');
@@ -36,4 +41,4 @@ class ComputerDowngrade extends Model
     {
         return $this->belongsTo(\Modules\SICA\Entities\Movement::class, 'movement_id');
     }
-} 
+}

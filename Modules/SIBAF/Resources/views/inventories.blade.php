@@ -3,20 +3,14 @@
 @section('title', 'Inventario de Equipos')
 
 @section('content')
+<link rel="stylesheet" href="{{ asset('modules/sibaf/css/inventories.css') }}">
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="m-0">Inventario de Computadores</h1>
             </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('sibaf.admin.welcome') }}">Inicio</a>
-                    </li>
-                    <li class="breadcrumb-item active">Computadores</li>
-                </ol>
-            </div>
+            
         </div>
     </div>
 </div>
@@ -35,12 +29,9 @@
             <div class="card-body">
                 <!-- Filtros -->
                 <form method="GET" action="{{ route('admin.sibaf.inventory.index') }}" class="row g-3 mb-4">
-
-
                     <div class="col-md-3">
                         <input type="text" name="serial_number" value="{{ request('serial_number') }}" class="form-control" placeholder="Serial del computador">
                     </div>
-
                     <div class="col-md-3">
                         <select name="warehouse_id" class="form-control">
                             <option value="">Todas las bodegas</option>
@@ -51,7 +42,6 @@
                             @endforeach
                         </select>
                     </div>
-
                     <div class="col-md-1">
                         <button type="submit" class="btn btn-primary w-100">Filtrar</button>
                     </div>
@@ -92,6 +82,8 @@
                                     <td>
                                         @if($inventory->state == 'Disponible')
                                             <span class="badge badge-success"><i class="fas fa-check"></i> Disponible</span>
+                                        @elseif($inventory->state == 'Arreglado')
+                                            <span class="badge badge-warning"><i class="fas fa-wrench"></i> Arreglado</span>
                                         @else
                                             <span class="badge badge-danger"><i class="fas fa-times"></i> No disponible</span>
                                         @endif
@@ -101,12 +93,37 @@
                                         <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalDetalle{{ $inventory->id }}" title="Ver detalles">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <!-- Botón Reporte Daño -->
-                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalReporteDanio{{ $inventory->id }}" title="Reportar daño">
-                                            <i class="fas fa-tools"></i>
-                                        </button>
-                                        <!-- Botón Reporte -->
                                         
+                                        <!-- Botón Reporte Daño (condicional) -->
+                                        @if(in_array($inventory->state, ['Disponible', 'Arreglado']))
+                                            @if(!$inventory->damageReports()->whereNotIn('state', ['Arreglado'])->exists())
+                                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalReporteDanio{{ $inventory->id }}" title="Reportar daño">
+                                                    <i class="fas fa-tools"></i>
+                                                </button>
+                                            @else
+                                                <button class="btn btn-secondary btn-sm" 
+                                                    onclick="Swal.fire({
+                                                        icon: 'warning',
+                                                        title: 'Acción no permitida',
+                                                        text: 'Ya existe un reporte de daño pendiente para este equipo. Espere a que sea marcado como arreglado.',
+                                                        confirmButtonColor: '#6c757d'
+                                                    });" 
+                                                    title="No disponible para reporte">
+                                                    <i class="fas fa-tools"></i>
+                                                </button>
+                                            @endif
+                                        @else
+                                            <button class="btn btn-secondary btn-sm" 
+                                                onclick="Swal.fire({
+                                                    icon: 'warning',
+                                                    title: 'Acción no permitida',
+                                                    text: 'No se puede reportar daño porque el equipo está en estado No disponible.',
+                                                    confirmButtonColor: '#6c757d'
+                                                });" 
+                                                title="No disponible para reporte">
+                                                <i class="fas fa-tools"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
 
@@ -118,9 +135,7 @@
                                                 <h5 class="modal-title" id="modalDetalleLabel{{ $inventory->id }}">
                                                     <i class="fas fa-desktop"></i> Detalles del Computador
                                                 </h5>
-                                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Cerrar">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
+                                                
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row">
@@ -165,6 +180,8 @@
                                                         <span class="ml-2">
                                                             @if($inventory->state == 'Disponible')
                                                                 <span class="badge badge-success"><i class="fas fa-check"></i> Disponible</span>
+                                                            @elseif($inventory->state == 'Arreglado')
+                                                                <span class="badge badge-warning"><i class="fas fa-wrench"></i> Arreglado</span>
                                                             @else
                                                                 <span class="badge badge-danger"><i class="fas fa-times"></i> No disponible</span>
                                                             @endif
@@ -214,21 +231,14 @@
                                                             <span class="font-weight-bold"><i class="fas fa-user-tag"></i> Nombre:</span>
                                                             <span class="ml-2">{{ Auth::user()->nickname ?? '' }}</span>
                                                         </div>
-                                                        <div class="col-md-6 mb-3">
-                                                            <span class="font-weight-bold"><i class="fas fa-image"></i> Foto:</span>
-                                                            @if(isset($inventory->computer->photo))
-                                                                <img src="{{ asset('storage/' . $inventory->computer->photo) }}" alt="Foto del computador" class="img-fluid rounded" style="max-width: 120px;">
-                                                            @else
-                                                                <span class="ml-2">No disponible</span>
-                                                            @endif
-                                                        </div>
+                                                        
                                                         <div class="col-md-12 mb-3">
                                                             <label for="damage_description_{{ $inventory->id }}" class="font-weight-bold"><i class="fas fa-align-left"></i> Descripción del daño:</label>
                                                             <textarea name="description" id="damage_description_{{ $inventory->id }}" class="form-control" rows="3" required></textarea>
                                                         </div>
                                                         <div class="col-md-6 mb-3">
                                                             <label for="state_{{ $inventory->id }}" class="font-weight-bold"><i class="fas fa-toggle-on"></i> Estado:</label>
-                                                            <input type="text" name="state" id="state_{{ $inventory->id }}" class="form-control" value="Disponible" readonly>
+                                                            <input type="text" name="state" id="state_{{ $inventory->id }}" class="form-control" value="Solicitado" readonly>
                                                         </div>
                                                         <div class="col-md-12 mb-3">
                                                             <label for="photo_{{ $inventory->id }}" class="font-weight-bold"><i class="fas fa-image"></i> Foto del daño:</label>
@@ -254,10 +264,8 @@
                                 </tr>
                             @endforelse
                         </tbody>
-                        
                     </table>
                 </div>
-                
 
                 <!-- Paginación -->
                 @if (method_exists($inventories, 'links'))
@@ -274,6 +282,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Bootstrap JS (para modales) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @endsection
-
-

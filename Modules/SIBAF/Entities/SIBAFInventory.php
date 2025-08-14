@@ -3,7 +3,6 @@
 
 namespace Modules\SIBAF\Entities;
 
-
 use Modules\SICA\Entities\Inventory as BaseInventory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\SICA\Entities\Element;
@@ -20,7 +19,7 @@ class SIBAFInventory extends BaseInventory
         'person_id',
         'element_id',
         'productive_unit_warehouse_id',
-        'environment_id', // Aún puede estar en fillable si se usa
+        'environment_id',
         'amount',
         'stock',
         'state'
@@ -45,6 +44,11 @@ class SIBAFInventory extends BaseInventory
     public function computer()
     {
         return $this->hasOne(\Modules\GPES\Entities\Computer::class, 'element_id', 'element_id');
+    }
+
+    public function damageReports()
+    {
+        return $this->hasMany(\Modules\SIBAF\Entities\DamageReport::class, 'inventory_id');
     }
 
     /**

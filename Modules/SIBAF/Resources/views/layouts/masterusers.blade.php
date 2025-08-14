@@ -1,921 +1,2070 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="{{ asset('images/Favicon2.png') }}" type="image/x-icon">
-    <title>SIBAF - Sistema de Gestión SENA</title>
-    
-    <!-- Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('AdminLTE/plugins/fontawesome-free/css/all.min.css') }}">
-    <!-- OverlayScrollbars -->
-    <link rel="stylesheet" href="{{ asset('AdminLTE/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('AdminLTE/dist/css/adminlte.min.css') }}">
-    
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-    
-    <style>
-        :root {
-            --primary-color: #1a2332;
-            --secondary-color: #2c3e50;
-            --accent-color: #34495e;
-            --sena-green: #39a900;
-            --sena-orange: #ff8c00;
-            --dark-color: #1a2332;
-            --light-color: #f8f9fa;
-            --text-color: #2c3e50;
-            --text-light: #6c757d;
-            --white: #ffffff;
-            --shadow-soft: 0 2px 15px rgba(26, 35, 50, 0.08);
-            --shadow-medium: 0 4px 25px rgba(26, 35, 50, 0.12);
-        }
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="icon" href="{{ asset('images/Favicon2.png') }}" type="image/x-icon">
+        <title>SIBAF - Sistema de Gestión SENA</title>
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: var(--light-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        
-        /* Preloader simplificado */
-        .preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.6s ease-out, visibility 0.6s;
-        }
-        
-        .preloader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-        .loader-container {
-            text-align: center;
-        }
-        
-        /* Logo SENA animado */
-        .sena-logo {
-            width: 120px;
-            height: 120px;
-            background: var(--white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-            animation: pulse-logo 2s infinite;
-        }
-        
-        .sena-logo i {
-            font-size: 60px;
-            color: var(--sena-green);
-        }
-        
-        @keyframes pulse-logo {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        .loader-text {
-            color: var(--white);
-            font-size: 24px;
-            font-weight: 300;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-        }
-        
-        .loader-subtext {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            font-weight: 300;
-        }
-        
-        .progress-bar {
-            width: 200px;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            margin: 20px auto 0;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: var(--sena-green);
-            animation: fillProgress 3s forwards;
-            border-radius: 2px;
-        }
-        
-        @keyframes fillProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-        
-        /* Navbar con ícono de teléfono */
-        .navbar {
-            background: rgba(26, 35, 50, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow-soft);
-            transition: all 0.3s ease;
-            padding: 15px 0;
-        }
-        
-        .navbar.scrolled {
-            background: var(--primary-color);
-            box-shadow: var(--shadow-medium);
-        }
-        
-        .navbar .nav-link {
-            color: var(--white) !important;
-            font-weight: 400;
-            padding: 10px 20px !important;
-            transition: color 0.3s ease;
-        }
-        
-        .navbar .nav-link:hover {
-            color: var(--sena-green) !important;
-        }
-        
-        /* Ícono de teléfono en navbar */
-        .phone-icon {
-            position: absolute;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--sena-green);
-            font-size: 20px;
-            background: rgba(57, 169, 0, 0.1);
-            padding: 10px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-        
-        .phone-icon:hover {
-            background: rgba(57, 169, 0, 0.2);
-            transform: translateY(-50%) scale(1.1);
-        }
-        
-        /* Hero section minimalista */
-        .hero-section {
-            height: 100vh;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('{{ asset("images/sena-campus.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.15;
-            transition: all 0.3s ease;
-        }
-        
-        /* IMÁGENES FLOTANTES DE AMBIENTES DE FORMACIÓN */
-        .floating-images {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .floating-image {
-            position: absolute;
-            border-radius: 12px;
-            box-shadow: var(--shadow-medium);
-            transition: all 0.3s ease;
-            opacity: 0.9;
-        }
+        <!-- Google Fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="{{ asset('AdminLTE/plugins/fontawesome-free/css/all.min.css') }}">
+        <!-- OverlayScrollbars -->
+        <link rel="stylesheet" href="{{ asset('AdminLTE/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="{{ asset('AdminLTE/dist/css/adminlte.min.css') }}">
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="{{ asset('css/sibaf-styles.css') }}">
+        <link rel="stylesheet" href="{{ asset('modules/sibaf/css/styles.css') }}">
 
-        /* Imagen izquierda superior */
-        .floating-image.left-top {
-            left: -50px;
-            top: 120px;
-            width: 280px;
-            height: 200px;
-            background-image: url('{{ asset("images/aula-sistemas.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            transform: rotate(-5deg);
-            animation: float-left 6s ease-in-out infinite;
-        }
+        <!-- Scripts -->
+        <script src="{{ asset('modules/sibaf/js/script.js') }}" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 
-        /* Imagen derecha superior */
-        .floating-image.right-top {
-            right: -50px;
-            top: 150px;
-            width: 260px;
-            height: 180px;
-            background-image: url('{{ asset("images/laboratorio.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            transform: rotate(3deg);
-            animation: float-right 7s ease-in-out infinite;
-        }
-
-        /* Imagen izquierda media */
-        .floating-image.left-middle {
-            left: -40px;
-            top: 400px;
-            width: 240px;
-            height: 160px;
-            background-image: url('{{ asset("images/taller-mecanica.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            transform: rotate(2deg);
-            animation: float-left 8s ease-in-out infinite;
-            animation-delay: -2s;
-        }
-
-        /* Imagen derecha media */
-        .floating-image.right-middle {
-            right: -60px;
-            top: 450px;
-            width: 300px;
-            height: 220px;
-            background-image: url('{{ asset("images/salon-clases.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            transform: rotate(-4deg);
-            animation: float-right 9s ease-in-out infinite;
-            animation-delay: -3s;
-        }
-
-        /* Imagen izquierda inferior */
-        .floating-image.left-bottom {
-            left: -30px;
-            top: 650px;
-            width: 220px;
-            height: 150px;
-            background-image: url('{{ asset("images/biblioteca.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            transform: rotate(-3deg);
-            animation: float-left 7s ease-in-out infinite;
-            animation-delay: -4s;
-        }
-
-        /* Imagen derecha inferior */
-        .floating-image.right-bottom {
-            right: -40px;
-            top: 700px;
-            width: 270px;
-            height: 190px;
-            background-image: url('{{ asset("images/cafeteria.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            transform: rotate(4deg);
-            animation: float-right 6s ease-in-out infinite;
-            animation-delay: -1s;
-        }
-        
-        @keyframes float-left {
-            0%, 100% { 
-                transform: translateX(0) translateY(0) rotate(-5deg); 
+        <style>
+            /* SIBAF Dashboard - Estilos Profesionales con Azul Oscuro */
+            :root {
+                --primary-color: #1e3a8a;
+                --primary-light: #3b82f6;
+                --primary-dark: #1e40af;
+                --secondary-color: #ff6b35;
+                --accent-color: #06b6d4;
+                --white: #ffffff;
+                --light-gray: #f8f9fa;
+                --medium-gray: #e9ecef;
+                --dark-gray: #6c757d;
+                --text-dark: #212529;
+                --text-light: #6c757d;
+                --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+                --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.15);
+                --shadow-heavy: 0 8px 30px rgba(0, 0, 0, 0.2);
+                --border-radius: 12px;
+                --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
-            50% { 
-                transform: translateX(15px) translateY(-10px) rotate(-3deg); 
+
+            /* Reset y Base */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
-        }
-        
-        @keyframes float-right {
-            0%, 100% { 
-                transform: translateX(0) translateY(0) rotate(3deg); 
+
+            body {
+                font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                line-height: 1.6;
+                color: var(--text-dark);
+                background: var(--white);
+                overflow-x: hidden;
             }
-            50% { 
-                transform: translateX(-15px) translateY(-10px) rotate(5deg); 
+
+            /* Imagen en hero-section */
+            .hero-section {
+                position: relative;
+                padding: 120px 0;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                overflow: hidden;
             }
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            color: var(--white);
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .sena-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px 20px;
-            border-radius: 25px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .sena-badge i {
-            color: var(--sena-green);
-            font-size: 20px;
-        }
-        
-        .hero-title {
-            font-size: 3rem;
-            font-weight: 300;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-        
-        .hero-subtitle {
-            font-size: 1.3rem;
-            font-weight: 300;
-            opacity: 0.9;
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .hero-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--sena-green);
-            color: var(--white);
-            padding: 15px 30px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-soft);
-        }
-        
-        .hero-cta:hover {
-            background: #2d8a00;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-medium);
-            color: var(--white);
-            text-decoration: none;
-        }
-        
-        /* Sección de información simple - CON Z-INDEX ALTO PARA TAPAR IMÁGENES */
-        .info-section {
-            padding: 80px 0;
-            background: var(--white);
-            position: relative;
-            z-index: 10;
-        }
-        
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        .info-card {
-            text-align: center;
-            padding: 40px 30px;
-            background: var(--white);
-            border-radius: 12px;
-            box-shadow: var(--shadow-soft);
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        
-        .info-card.revealed {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .info-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-medium);
-        }
-        
-        .info-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, var(--sena-green) 0%, #2d8a00 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-        }
-        
-        .info-icon i {
-            font-size: 30px;
-            color: var(--white);
-        }
-        
-        .info-card h3 {
-            font-size: 1.4rem;
-            font-weight: 500;
-            margin-bottom: 15px;
-            color: var(--text-color);
-        }
-        
-        .info-card p {
-            color: var(--text-light);
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-        
-        /* Sección SENA - CON Z-INDEX ALTO */
-        .sena-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: var(--white);
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-        
-        .sena-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .sena-logo-large {
-            width: 100px;
-            height: 100px;
-            background: var(--white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            box-shadow: var(--shadow-medium);
-        }
-        
-        .sena-logo-large i {
-            font-size: 50px;
-            color: var(--sena-green);
-        }
-        
-        .sena-section h2 {
-            font-size: 2.5rem;
-            font-weight: 300;
-            margin-bottom: 20px;
-        }
-        
-        .sena-section p {
-            font-size: 1.2rem;
-            font-weight: 300;
-            opacity: 0.9;
-            line-height: 1.7;
-        }
-        
-        /* Sección de acceso - CON Z-INDEX ALTO */
-        .access-section {
-            padding: 80px 0;
-            background: var(--light-color);
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-        
-        .access-content {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 50px 40px;
-            background: var(--white);
-            border-radius: 12px;
-            box-shadow: var(--shadow-soft);
-        }
-        
-        .access-content h2 {
-            font-size: 2rem;
-            font-weight: 400;
-            margin-bottom: 20px;
-            color: var(--text-color);
-        }
-        
-        .access-content p {
-            color: var(--text-light);
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-        }
-        
-        .btn-access {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--primary-color);
-            color: var(--white);
-            padding: 15px 35px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-soft);
-        }
-        
-        .btn-access:hover {
-            background: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-medium);
-            color: var(--white);
-            text-decoration: none;
-        }
-        
-        /* Footer simple - CON Z-INDEX ALTO */
-        footer {
-            background: var(--primary-color) !important;
-            color: var(--white);
-            padding: 30px 20px !important;
-            text-align: center;
-            border-top: 3px solid var(--sena-green);
-            position: relative;
-            z-index: 10;
-        }
-        
-        footer a {
-            color: var(--sena-green) !important;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        footer a:hover {
-            color: #2d8a00 !important;
-        }
-        
-        /* Animaciones suaves */
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
-        
-        .scroll-reveal.revealed {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
+
+            .hero-background {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: -1;
+            }
+
+            .hero-background img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            .hero-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(255, 255, 255, 0.9));
+            }
+
+            .hero-pattern {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image: radial-gradient(circle at 25% 25%, rgba(30, 58, 138, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 75% 75%, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+            }
+
+            .hero-content {
+                text-align: center;
+                max-width: 800px;
+                margin: 0 auto;
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Navbar Profesional */
+            .navbar-professional {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--medium-gray);
+                padding: 0.5rem 0;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                transition: var(--transition);
+            }
+
+            .navbar-professional .container-fluid {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .navbar-brand {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .brand-logo {
+                width: 40px;
+                height: 40px;
+                background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+                border-radius: var(--border-radius);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--white);
+                font-size: 1.2rem;
+            }
+
+            .brand-text {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .brand-name {
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: var(--text-dark);
+                line-height: 1;
+            }
+
+            .brand-subtitle {
+                font-size: 0.75rem;
+                color: var(--text-light);
+                font-weight: 400;
+            }
+
+            .navbar-nav {
+                display: flex;
+                list-style: none;
+                gap: 1rem;
+                margin: 0;
+            }
+
+            .nav-item {
+                position: relative;
+            }
+
+            .nav-link {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 16px;
+                color: var(--text-dark);
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 0.875rem;
+                border-radius: var(--border-radius);
+                transition: var(--transition);
+                background: var(--white);
+                border: 1px solid transparent;
+            }
+
+            .nav-link:hover,
+            .nav-link.active {
+                background: var(--primary-color);
+                color: var(--white);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-medium);
+            }
+
+            .navbar-actions {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            .btn-login,
+            .btn-logout {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 16px;
+                background: var(--white);
+                color: var(--primary-color);
+                text-decoration: none;
+                border: 2px solid var(--primary-color);
+                border-radius: var(--border-radius);
+                font-weight: 600;
+                font-size: 0.875rem;
+                transition: var(--transition);
+                cursor: pointer;
+            }
+
+            .btn-login:hover,
+            .btn-logout:hover {
+                background: var(--primary-color);
+                color: var(--white);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-medium);
+            }
+
+            /* Main Wrapper */
+            .main-wrapper {
+                margin-top: 70px;
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(5px);
+                min-height: calc(100vh - 70px);
+            }
+
+            /* Container */
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+
+            .container-fluid {
+                width: 100%;
+                padding: 0 20px;
+            }
+
+            .hero-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 12px 24px;
+                background: var(--white);
+                border: 1px solid var(--medium-gray);
+                border-radius: 50px;
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: var(--text-dark);
+                margin-bottom: 2rem;
+                box-shadow: var(--shadow-light);
+            }
+
             .hero-title {
-                font-size: 2.2rem;
+                font-size: 4rem;
+                font-weight: 800;
+                margin-bottom: 1.5rem;
+                line-height: 1.1;
             }
-            
+
+            .title-main {
+                display: block;
+                color: var(--text-dark);
+            }
+
+            .title-gradient {
+                display: block;
+                background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
             .hero-subtitle {
+                font-size: 1.25rem;
+                color: var(--text-light);
+                margin-bottom: 3rem;
+                line-height: 1.6;
+            }
+
+            .hero-stats {
+                display: flex;
+                justify-content: center;
+                gap: 3rem;
+                margin-bottom: 3rem;
+            }
+
+            .stat-item {
+                text-align: center;
+                padding: 1.5rem;
+                background: var(--white);
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-light);
+                border: 1px solid var(--medium-gray);
+            }
+
+            .stat-number {
+                display: block;
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: var(--primary-color);
+                line-height: 1;
+            }
+
+            .stat-label {
+                font-size: 0.875rem;
+                color: var(--text-light);
+                font-weight: 500;
+                margin-top: 0.5rem;
+            }
+
+            .hero-actions {
+                display: flex;
+                justify-content: center;
+                gap: 1.5rem;
+                flex-wrap: wrap;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                display: inline-flex;
+                align-items: center;
+                gap: 12px;
+                padding: 16px 32px;
+                border-radius: var(--border-radius);
+                font-weight: 600;
+                text-decoration: none;
+                transition: var(--transition);
                 font-size: 1.1rem;
             }
-            
-            .info-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
+
+            .btn-primary {
+                background: var(--primary-color);
+                color: var(--white);
+                border: 2px solid var(--primary-color);
             }
-            
-            .sena-section h2 {
+
+            .btn-primary:hover {
+                background: var(--primary-dark);
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-heavy);
+            }
+
+            .btn-secondary {
+                background: var(--white);
+                color: var(--primary-color);
+                border: 2px solid var(--primary-color);
+            }
+
+            .btn-secondary:hover {
+                background: var(--primary-color);
+                color: var(--white);
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-heavy);
+            }
+
+            /* Features Section */
+            .features-section {
+                padding: 120px 0;
+                background: var(--white);
+                position: relative;
+                overflow: hidden;
+            }
+
+            /* Agregando imagen de fondo fija */
+            .features-background {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                z-index: -1;
+                opacity: 0.1;
+            }
+
+            .features-background img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .section-header {
+                text-align: center;
+                margin-bottom: 4rem;
+                position: relative;
+                z-index: 2;
+            }
+
+            .section-title {
+                font-size: 3rem;
+                font-weight: 700;
+                color: var(--text-dark);
+                margin-bottom: 1rem;
+            }
+
+            .section-subtitle {
+                font-size: 1.25rem;
+                color: var(--text-light);
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            /* Modificando grid para una sola fila horizontal */
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1.5rem;
+                position: relative;
+                z-index: 2;
+            }
+
+            /* Ajustando tamaño de las tarjetas para que sean más pequeñas */
+            .feature-card {
+                background: rgba(255, 255, 255, 0.95);
+                padding: 1.5rem;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-light);
+                border: 1px solid var(--medium-gray);
+                transition: var(--transition);
+                position: relative;
+                overflow: hidden;
+                backdrop-filter: blur(10px);
+            }
+
+            .feature-card:hover {
+                transform: translateY(-8px);
+                box-shadow: var(--shadow-heavy);
+                border-color: var(--primary-color);
+                background: rgba(255, 255, 255, 0.98);
+            }
+
+            /* Reduciendo tamaño del icono */
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+                border-radius: var(--border-radius);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--white);
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            /* Ajustando tamaño de título */
+            .feature-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--text-dark);
+                margin-bottom: 0.75rem;
+            }
+
+            /* Reduciendo tamaño de descripción */
+            .feature-description {
+                color: var(--text-light);
+                margin-bottom: 1rem;
+                line-height: 1.5;
+                font-size: 0.9rem;
+            }
+
+            .feature-metrics {
+                display: flex;
+                gap: 1rem;
+            }
+
+            /* Ajustando métricas para tarjetas más pequeñas */
+            .metric {
+                text-align: center;
+                padding: 0.75rem;
+                background: var(--light-gray);
+                border-radius: var(--border-radius);
+                flex: 1;
+            }
+
+            .metric-value {
+                display: block;
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: var(--primary-color);
+            }
+
+            .metric-label {
+                font-size: 0.75rem;
+                color: var(--text-light);
+                margin-top: 0.25rem;
+            }
+
+            /* Agregando responsive para pantallas más pequeñas */
+            @media (max-width: 1200px) {
+                .features-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 1.5rem;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .features-grid {
+                    grid-template-columns: 1fr;
+                    gap: 1.5rem;
+                }
+                
+                .feature-card {
+                    padding: 2rem;
+                }
+                
+                .feature-icon {
+                    width: 70px;
+                    height: 70px;
+                    font-size: 1.75rem;
+                }
+                
+                .feature-title {
+                    font-size: 1.5rem;
+                }
+                
+                .feature-description {
+                    font-size: 1rem;
+                }
+            }
+
+            /* Technology Section */
+            .technology-section {
+                padding: 120px 0;
+                background: var(--light-gray);
+            }
+
+            .tech-content {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+                align-items: center;
+            }
+
+            .tech-title {
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: var(--text-dark);
+                margin-bottom: 1.5rem;
+            }
+
+            .tech-description {
+                font-size: 1.125rem;
+                color: var(--text-light);
+                margin-bottom: 2rem;
+                line-height: 1.6;
+            }
+
+            .tech-features {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .tech-feature {
+                display: flex;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1.5rem;
+                background: var(--white);
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-light);
+            }
+
+            .tech-feature i {
+                font-size: 1.5rem;
+                color: var(--primary-color);
+                margin-top: 0.25rem;
+            }
+
+            .tech-feature h4 {
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: var(--text-dark);
+                margin-bottom: 0.5rem;
+            }
+
+            .tech-feature p {
+                color: var(--text-light);
+                font-size: 0.875rem;
+            }
+
+            .tech-visual {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .tech-circle {
+                position: relative;
+                width: 300px;
+                height: 300px;
+            }
+
+            .circle-layer {
+                position: absolute;
+                border-radius: 50%;
+                border: 2px solid;
+            }
+
+            .layer-1 {
+                width: 100%;
+                height: 100%;
+                border-color: var(--primary-color);
+                opacity: 0.3;
+                animation: rotate 20s linear infinite;
+            }
+
+            .layer-2 {
+                width: 80%;
+                height: 80%;
+                top: 10%;
+                left: 10%;
+                border-color: var(--secondary-color);
+                opacity: 0.5;
+                animation: rotate 15s linear infinite reverse;
+            }
+
+            .layer-3 {
+                width: 60%;
+                height: 60%;
+                top: 20%;
+                left: 20%;
+                border-color: var(--accent-color);
+                opacity: 0.7;
+                animation: rotate 10s linear infinite;
+            }
+
+            .tech-logo {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 80px;
+                height: 80px;
+                background: var(--white);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 font-size: 2rem;
+                color: var(--primary-color);
+                box-shadow: var(--shadow-medium);
             }
-            
-            .access-content {
-                margin: 20px;
-                padding: 40px 30px;
+
+            @keyframes rotate {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
             }
-            
-            /* Ocultar imágenes flotantes en móvil */
-            .floating-images {
-                display: none;
+
+            /* SENA Section */
+            .sena-section {
+                padding: 120px 0;
+                background: var(--white);
+                text-align: center;
             }
-            
-            .phone-icon {
-                right: 15px;
-                font-size: 18px;
-                padding: 8px;
+
+            .sena-logo {
+                width: 100px;
+                height: 100px;
+                background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--white);
+                font-size: 3rem;
+                margin: 0 auto 2rem;
             }
-        }
-        
-        /* Efectos sutiles */
-        .fade-in {
-            animation: fadeIn 0.8s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
-</head>
-<body>
-    <!-- Preloader SENA -->
-    <div class="preloader">
-        <div class="loader-container">
-            <div class="sena-logo">
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <div class="loader-text">SIBAF</div>
-            <div class="loader-subtext">Sistema de Gestión SENA</div>
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Imágenes flotantes de ambientes de formación -->
-    <div class="floating-images" id="floatingImages">
-        <div class="floating-image left-top"></div>
-        <div class="floating-image right-top"></div>
-        <div class="floating-image left-middle"></div>
-        <div class="floating-image right-middle"></div>
-        <div class="floating-image left-bottom"></div>
-        <div class="floating-image right-bottom"></div>
-    </div>
+            .sena-title {
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: var(--text-dark);
+                margin-bottom: 1.5rem;
+            }
 
-    <!-- Navbar con ícono de teléfono -->
-    <nav class="navbar navbar-expand navbar-dark fixed-top" id="mainNavbar">
-        <div class="container">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a href="{{ route('login') }}" class="nav-link">Inicio</a>
-                </li>
-                @auth
-                    @if(checkRol('sibaf.admin'))
-                        <li class="nav-item">
-                            <a href="{{ route('sibaf.admin.welcome') }}"
-                                class="nav-link @if(Route::is('sibaf.admin.*')) active @endif">
-                                Administrador
-                            </a>
-                        </li>
-                    @endif
-                    @if(checkRol('sibaf.soporte'))
-                        <li class="nav-item">
-                            <a href="{{ route('sibaf.soporte.welcomesoporte') }}"
-                                class="nav-link @if(Route::is('sibaf.soporte.*')) active @endif">
-                                Mesa de Ayuda
-                            </a>
-                        </li>
-                    @endif
-                    @if(checkRol('sibaf.instructor'))
-                        <li class="nav-item">
-                            <a href="{{ route('sibaf.instructor.masterinstructor') }}"
-                                class="nav-link @if(Route::is('sibaf.instructor.*')) active @endif">
-                                Instructor
-                            </a>
-                        </li>
-                    @endif
-                @endauth
-            </ul>
-            <!-- Ícono de teléfono -->
-            <div class="phone-icon">
-                <i class="fas fa-phone"></i>
-            </div>
-        </div>
-    </nav>
+            .sena-description {
+                font-size: 1.125rem;
+                color: var(--text-light);
+                max-width: 800px;
+                margin: 0 auto 3rem;
+                line-height: 1.6;
+            }
 
-    <!-- Hero Section -->
-    <section class="hero-section" id="heroSection">
-        <div class="hero-background" id="heroBackground"></div>
-        <div class="container">
-            <div class="hero-content fade-in">
-                <div class="sena-badge">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>SENA - Servicio Nacional de Aprendizaje</span>
-                </div>
-                <h1 class="hero-title">SIBAF</h1>
-                <p class="hero-subtitle">
-                    Sistema Integral de Bajas de Ambiente y Formación
-                </p>
-                <a href="#info" class="hero-cta">
-                    <i class="fas fa-arrow-down"></i>
-                    Conocer más
-                </a>
-            </div>
-        </div>
-    </section>
+            .sena-stats {
+                display: flex;
+                justify-content: center;
+                gap: 3rem;
+                flex-wrap: wrap;
+            }
 
-    <!-- Sección de información -->
-    <section class="info-section" id="info">
-        <div class="container">
-            <div class="info-grid">
-                <div class="info-card scroll-reveal" style="transition-delay: 0.1s;">
-                    <div class="info-icon">
-                        <i class="fas fa-clipboard-list"></i>
+            .sena-stat {
+                text-align: center;
+                padding: 2rem;
+                background: var(--light-gray);
+                border-radius: var(--border-radius);
+                min-width: 200px;
+            }
+
+            .sena-stat .stat-number {
+                display: block;
+                font-size: 3rem;
+                font-weight: 700;
+                color: var(--primary-color);
+                line-height: 1;
+            }
+
+            .sena-stat .stat-text {
+                font-size: 1rem;
+                color: var(--text-light);
+                margin-top: 0.5rem;
+            }
+
+            /* CTA Section */
+            .cta-section {
+                padding: 120px 0;
+                background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+                text-align: center;
+                color: var(--white);
+            }
+
+            .cta-title {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+            }
+
+            .cta-description {
+                font-size: 1.25rem;
+                margin-bottom: 2rem;
+                opacity: 0.9;
+            }
+
+            .cta-button {
+                display: inline-flex;
+                align-items: center;
+                gap: 12px;
+                padding: 18px 36px;
+                background: var(--white);
+                color: var(--primary-color);
+                text-decoration: none;
+                border-radius: var(--border-radius);
+                font-weight: 600;
+                font-size: 1.125rem;
+                transition: var(--transition);
+            }
+
+            .cta-button:hover {
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-heavy);
+            }
+
+            /* Footer */
+            .footer-professional {
+                background: var(--white);
+                border-top: 1px solid var(--medium-gray);
+                padding: 4rem 0 2rem;
+            }
+
+            .footer-content {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .footer-logo {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 1rem;
+            }
+
+            .footer-logo i {
+                font-size: 2rem;
+                color: var(--primary-color);
+            }
+
+            .footer-logo span {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--text-dark);
+            }
+
+            .footer-description {
+                color: var(--text-light);
+                line-height: 1.6;
+            }
+
+            .footer-title {
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: var(--text-dark);
+                margin-bottom: 1rem;
+            }
+
+            .footer-links {
+                list-style: none;
+            }
+
+            .footer-links li {
+                margin-bottom: 0.5rem;
+            }
+
+            .footer-links a {
+                color: var(--text-light);
+                text-decoration: none;
+                transition: var(--transition);
+            }
+
+            .footer-links a:hover {
+                color: var(--primary-color);
+            }
+
+            .footer-contact {
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .contact-item {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                color: var(--text-light);
+            }
+
+            .contact-item i {
+                color: var(--primary-color);
+                width: 16px;
+            }
+
+            .footer-social {
+                display: flex;
+                gap: 1rem;
+            }
+
+            .social-link {
+                width: 40px;
+                height: 40px;
+                background: var(--light-gray);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--text-light);
+                text-decoration: none;
+                transition: var(--transition);
+            }
+
+            .social-link:hover {
+                background: var(--primary-color);
+                color: var(--white);
+                transform: translateY(-2px);
+            }
+
+            .footer-bottom {
+                border-top: 1px solid var(--medium-gray);
+                padding-top: 2rem;
+                text-align: center;
+            }
+
+            .footer-copyright {
+                color: var(--text-light);
+                font-size: 0.875rem;
+            }
+
+            .footer-copyright p {
+                margin-bottom: 0.5rem;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .navbar-nav {
+                    display: none;
+                }
+
+                .brand-logo {
+                    width: 35px;
+                    height: 35px;
+                    font-size: 1rem;
+                }
+
+                .brand-name {
+                    font-size: 1.1rem;
+                }
+
+                .brand-subtitle {
+                    font-size: 0.7rem;
+                }
+
+                .hero-title {
+                    font-size: 2.5rem;
+                }
+
+                .hero-stats {
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .hero-actions {
+                    flex-direction: column;
+                }
+
+                .tech-content {
+                    grid-template-columns: 1fr;
+                    gap: 2rem;
+                }
+
+                .sena-stats {
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .section-title {
+                    font-size: 2rem;
+                }
+
+                .cta-title {
+                    font-size: 2rem;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .container {
+                    padding: 0 15px;
+                }
+
+                .hero-section {
+                    padding: 80px 0;
+                }
+
+                .features-section,
+                .technology-section,
+                .sena-section,
+                .cta-section {
+                    padding: 80px 0;
+                }
+
+                .hero-title {
+                    font-size: 2rem;
+                }
+
+                .section-title {
+                    font-size: 1.75rem;
+                }
+            }
+
+            /* Animaciones adicionales */
+            .feature-card,
+            .tech-feature,
+            .stat-item {
+                animation: fadeInUp 0.6s ease-out;
+            }
+
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Efectos de hover mejorados */
+            .feature-card:hover .feature-icon {
+                transform: scale(1.1);
+                transition: var(--transition);
+            }
+
+            .tech-feature:hover {
+                transform: translateX(10px);
+                box-shadow: var(--shadow-medium);
+            }
+
+            /* Scrollbar personalizado */
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: var(--light-gray);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: var(--primary-color);
+                border-radius: 4px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--primary-dark);
+            }
+
+            /* Estilos para la sección de imagen fija */
+            /* Agregando estilos para la imagen fija entre secciones */
+            .fixed-image-section {
+                height: 100vh;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .fixed-image-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                z-index: -1;
+            }
+
+            .fixed-background-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+
+            .fixed-image-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.3);
+            }
+
+            /* Ajustando responsive para pantallas más pequeñas */
+        </style>
+    </head>
+    <body class="professional-layout">
+
+        <!-- Navbar Profesional -->
+        <nav class="navbar-professional" id="mainNavbar">
+            <div class="container-fluid">
+                <div class="navbar-brand">
+                    <div class="brand-logo">
+                        <i class="fas fa-graduation-cap"></i>
                     </div>
-                    <h3>Gestión de Reportes</h3>
-                    <p>Administra reportes de incidencias de manera eficiente con seguimiento en tiempo real.</p>
+                    <div class="brand-text">
+                        <span class="brand-name">SIBAF</span>
+                        <span class="brand-subtitle">Sistema de Gestión SENA</span>
+                    </div>
                 </div>
                 
-                <div class="info-card scroll-reveal" style="transition-delay: 0.2s;">
-                    <div class="info-icon">
-                        <i class="fas fa-laptop"></i>
-                    </div>
-                    <h3>Control de Equipos</h3>
-                    <p>Sistema integral para el control y seguimiento de equipos tecnológicos del SENA.</p>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="{{ route('login') }}" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    @auth
+                        @if(checkRol('sibaf.admin'))
+                            <li class="nav-item">
+                                <a href="{{ route('sibaf.admin.welcome') }}"
+                                    class="nav-link @if(Route::is('sibaf.admin.*')) active @endif">
+                                    <i class="fas fa-user-shield"></i>
+                                    <span>Administrador</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(checkRol('sibaf.soporte'))
+                            <li class="nav-item">
+                                <a href="{{ route('sibaf.soporte.welcomesoporte') }}"
+                                    class="nav-link @if(Route::is('sibaf.soporte.*')) active @endif">
+                                    <i class="fas fa-headset"></i>
+                                    <span>Mesa de Ayuda</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(checkRol('sibaf.instructor'))
+                            <li class="nav-item">
+                                <a href="{{ route('sibaf.instructor.masterinstructor') }}"
+                                    class="nav-link @if(Route::is('sibaf.instructor.*')) active @endif">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <span>Instructor</span>
+                                </a>
+                            </li>
+                        @endif
+                    @endauth
+                </ul>
+
+                <div class="navbar-actions">
+                    @guest
+                        <a href="{{ route('login') }}" class="btn-login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Iniciar Sesión</span>
+                        </a>
+                    @else
+                        <div class="user-menu">
+                            <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                                @csrf
+                                <button type="submit" class="btn-logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Cerrar Sesión</span>
+                                </button>
+                            </form>
+                        </div>
+                    @endguest
+                </div>
+            </div>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <div class="main-wrapper">
+            
+            <!-- Hero Section Profesional -->
+            <section class="hero-section">
+                <div class="hero-background">
+                    <img src="{{ asset('modules/sibaf/images/imagen.png') }}" class="d-block w-100" alt="SIBAF Hero Image">
+                    <div class="hero-overlay"></div>
+                    <div class="hero-pattern"></div>
                 </div>
                 
-                <div class="info-card scroll-reveal" style="transition-delay: 0.3s;">
-                    <div class="info-icon">
-                        <i class="fas fa-chart-bar"></i>
+                <div class="container">
+                    <div class="hero-content">
+                        <div class="hero-badge">
+                            <i class="fas fa-award"></i>
+                            <span>SENA - Servicio Nacional de Aprendizaje</span>
+                        </div>
+                        
+                        <h1 class="hero-title">
+                            <span class="title-main">SIBAF</span>
+                            <span class="title-gradient">Sistema Integral</span>
+                        </h1>
+                        
+                        <p class="hero-subtitle">
+                            Plataforma avanzada para la gestión de bajas de ambiente y formación,
+                            optimizando los procesos educativos del SENA con tecnología de vanguardia.
+                        </p>
+                        
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <div class="stat-number" data-target="95">0</div>
+                                <div class="stat-label">% Eficiencia</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" data-target="24">0</div>
+                                <div class="stat-label">Horas Disponible</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" data-target="100">0</div>
+                                <div class="stat-label">% Confiable</div>
+                            </div>
+                        </div>
+                        
+                        <div class="hero-actions">
+                            <a href="#features" class="btn-primary">
+                                <span>Explorar Sistema</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                            <a href="{{ route('login') }}" class="btn-secondary">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Acceder</span>
+                            </a>
+                        </div>
                     </div>
-                    <h3>Reportes y Estadísticas</h3>
-                    <p>Genera informes detallados para la toma de decisiones estratégicas.</p>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <!-- Sección SENA -->
-    <section class="sena-section scroll-reveal">
-        <div class="container">
-            <div class="sena-content">
-                <div class="sena-logo-large">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <h2>Formación para el Trabajo</h2>
-                <p>
-                    El SENA ofrece formación gratuita a millones de colombianos del sector productivo, 
-                    fortaleciendo las competencias laborales y promoviendo el desarrollo tecnológico 
-                    y la innovación en todos los sectores económicos.
-                </p>
-            </div>
-        </div>
-    </section>
+            <!-- Sección de Características -->
+            <section class="features-section" id="features">
 
-    <!-- Sección de acceso -->
-    <section class="access-section">
-        <div class="container">
-            <div class="access-content scroll-reveal">
-                <h2>Acceso al Sistema</h2>
-                <p>Ingresa con tus credenciales para acceder a todas las funcionalidades del sistema.</p>
-                @auth
-                    <a href="{{ route('login') }}" class="btn-access">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Ingresar al Sistema
-                    </a>
-                @endauth
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <strong>Copyright &copy; 2023-2025 <a href="#">SENA</a>.</strong> 
-            Todos los derechos reservados.
-            <div class="float-right d-none d-sm-inline-block">
-                <b>SIBAF</b> v3.2.0
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="{{ asset('AdminLTE/plugins/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('AdminLTE/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-    <script>
-        $.widget.bridge('uibutton', $.ui.button);
-    </script>
-    <script src="{{ asset('AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('AdminLTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-    <script src="{{ asset('AdminLTE/dist/js/adminlte.js') }}"></script>
-
-    <!-- Script con efecto de tapado de imágenes -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Preloader
-            setTimeout(function() {
-                const preloader = document.querySelector('.preloader');
-                preloader.classList.add('hidden');
                 
-                setTimeout(function() {
-                    preloader.style.display = 'none';
-                    initScrollAnimations();
-                }, 600);
-            }, 3000);
+                
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title">Funcionalidades del Sistema</h2>
+                        <p class="section-subtitle">
+                            Herramientas profesionales diseñadas para optimizar la gestión 
+                            de ambientes y recursos formativos
+                        </p>
+                    </div>
+                    
+                    <!-- Las 4 tarjetas ahora están en una sola fila horizontal -->
+                    <div class="features-grid">
+                        <!-- Feature 1 -->
+                        <div class="feature-card" data-feature="reportes">
+                            <div class="feature-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <h3 class="feature-title">Gestión de Reportes</h3>
+                            <p class="feature-description">
+                                Sistema integral para el registro, seguimiento y resolución 
+                                de incidencias en ambientes formativos.
+                            </p>
+                            <div class="feature-metrics">
+                                <div class="metric">
+                                    <span class="metric-value">98%</span>
+                                    <span class="metric-label">Resueltos</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value">24h</span>
+                                    <span class="metric-label">Promedio</span>
+                                </div>
+                            </div>
+                        </div>
 
-            // Animaciones de scroll suaves
-            function initScrollAnimations() {
-                const observer = new IntersectionObserver(function(entries) {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('revealed');
+                        <!-- Feature 2 -->
+                        <div class="feature-card" data-feature="equipos">
+                            <div class="feature-icon">
+                                <i class="fas fa-laptop"></i>
+                            </div>
+                            <h3 class="feature-title">Control de Equipos</h3>
+                            <p class="feature-description">
+                                Inventario digital y control de mantenimiento para 
+                                equipos tecnológicos y recursos educativos.
+                            </p>
+                            <div class="feature-metrics">
+                                <div class="metric">
+                                    <span class="metric-value">1.2K</span>
+                                    <span class="metric-label">Equipos</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value">95%</span>
+                                    <span class="metric-label">Operativos</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="feature-card" data-feature="estadisticas">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h3 class="feature-title">Analytics & Reportes</h3>
+                            <p class="feature-description">
+                                Análisis avanzado de datos con dashboards interactivos 
+                                para la toma de decisiones estratégicas.
+                            </p>
+                            <div class="feature-metrics">
+                                <div class="metric">
+                                    <span class="metric-value">50+</span>
+                                    <span class="metric-label">Reportes</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value">100%</span>
+                                    <span class="metric-label">Tiempo Real</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feature 4 -->
+                        <div class="feature-card" data-feature="ambientes">
+                            <div class="feature-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <h3 class="feature-title">Gestión de Ambientes</h3>
+                            <p class="feature-description">
+                                Administración completa de espacios formativos, 
+                                programación de horarios y control de ocupación.
+                            </p>
+                            <div class="feature-metrics">
+                                <div class="metric">
+                                    <span class="metric-value">45</span>
+                                    <span class="metric-label">Ambientes</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value">85%</span>
+                                    <span class="metric-label">Ocupación</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Tecnología -->
+            <section class="technology-section">
+                <div class="container">
+                    <div class="tech-content">
+                        <div class="tech-text">
+                            <h2 class="tech-title">Tecnología de Vanguardia</h2>
+                            <p class="tech-description">
+                                SIBAF utiliza las últimas tecnologías para ofrecer una experiencia 
+                                de usuario excepcional y garantizar la máxima eficiencia en la 
+                                gestión de recursos educativos.
+                            </p>
+                            
+                            <div class="tech-features">
+                                <div class="tech-feature">
+                                    <i class="fas fa-cloud"></i>
+                                    <div>
+                                        <h4>Cloud Computing</h4>
+                                        <p>Acceso desde cualquier lugar con máxima seguridad</p>
+                                    </div>
+                                </div>
+                                <div class="tech-feature">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <div>
+                                        <h4>Responsive Design</h4>
+                                        <p>Optimizado para todos los dispositivos</p>
+                                    </div>
+                                </div>
+                                <div class="tech-feature">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <div>
+                                        <h4>Seguridad Avanzada</h4>
+                                        <p>Protección de datos con estándares internacionales</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tech-visual">
+                            <div class="tech-circle">
+                                <div class="circle-layer layer-1"></div>
+                                <div class="circle-layer layer-2"></div>
+                                <div class="circle-layer layer-3"></div>
+                                <div class="tech-logo">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección SENA -->
+            <section class="sena-section">
+                <div class="container">
+                    <div class="sena-content">
+                        <div class="sena-logo">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h2 class="sena-title">Formación para el Trabajo</h2>
+                        <p class="sena-description">
+                            El SENA ofrece formación gratuita a millones de colombianos del sector productivo, 
+                            fortaleciendo las competencias laborales y promoviendo el desarrollo tecnológico 
+                            y la innovación en todos los sectores económicos del país.
+                        </p>
+                        <div class="sena-stats">
+                            <div class="sena-stat">
+                                <span class="stat-number">9M+</span>
+                                <span class="stat-text">Colombianos formados</span>
+                            </div>
+                            <div class="sena-stat">
+                                <span class="stat-number">117</span>
+                                <span class="stat-text">Centros de formación</span>
+                            </div>
+                            <div class="sena-stat">
+                                <span class="stat-number">100%</span>
+                                <span class="stat-text">Gratuito</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Call to Action -->
+            <section class="cta-section">
+                <div class="container">
+                    <div class="cta-content">
+                        <h2 class="cta-title">¿Listo para optimizar tu gestión educativa?</h2>
+                        <p class="cta-description">
+                            Únete a los cientos de instructores y administradores que ya confían en SIBAF
+                        </p>
+                        <a href="{{ route('login') }}" class="cta-button">
+                            <span>Iniciar Ahora</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer Profesional -->
+        <footer class="footer-professional">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <div class="footer-logo">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>SIBAF</span>
+                        </div>
+                        <p class="footer-description">
+                            Sistema Integral de Bajas de Ambiente y Formación. 
+                            Innovación tecnológica para la educación del futuro.
+                        </p>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4 class="footer-title">Accesos Rápidos</h4>
+                        <ul class="footer-links">
+                            <li><a href="{{ route('login') }}">Inicio</a></li>
+                            @auth
+                                @if(checkRol('sibaf.admin'))
+                                    <li><a href="{{ route('sibaf.admin.welcome') }}">Panel Admin</a></li>
+                                @endif
+                                @if(checkRol('sibaf.soporte'))
+                                    <li><a href="{{ route('sibaf.soporte.welcomesoporte') }}">Mesa de Ayuda</a></li>
+                                @endif
+                                @if(checkRol('sibaf.instructor'))
+                                    <li><a href="{{ route('sibaf.instructor.masterinstructor') }}">Portal Instructor</a></li>
+                                @endif
+                            @endauth
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4 class="footer-title">Contacto</h4>
+                        <div class="footer-contact">
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>soporte@sena.edu.co</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>+57 1 5461500</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Bogotá D.C., Colombia</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4 class="footer-title">Síguenos</h4>
+                        <div class="footer-social">
+                            <a href="#" class="social-link">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <div class="footer-copyright">
+                        <p>&copy; 2023-2025 SENA - Todos los derechos reservados</p>
+                        <p>SIBAF v3.2.0 - Sistema desarrollado para la excelencia educativa</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Scripts -->
+        <script src="{{ asset('AdminLTE/plugins/jquery/jquery.min.js') }}"></script>
+        <script src="{{ asset('AdminLTE/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+        <script src="{{ asset('AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('AdminLTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+        <script src="{{ asset('AdminLTE/dist/js/adminlte.js') }}"></script>
+        <script>
+            // ===== SIBAF PROFESSIONAL SCRIPTS =====
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('🚀 SIBAF Professional System Loading...');
+                
+                // ===== INICIALIZACIÓN PRINCIPAL =====
+                initializeSystem();
+                
+                function initializeSystem() {
+                    initializeNavbar();
+                    initializeHeroAnimations();
+                    initializeCounters();
+                    initializeFeatureCards();
+                    initializeSmoothScroll();
+                    initializeScrollAnimations();
+                    initializeParallax();
+                    initializeLazyLoading();
+                    
+                    console.log('✅ SIBAF System Initialized Successfully!');
+                }
+                
+                // ===== NAVBAR PROFESIONAL =====
+                function initializeNavbar() {
+                    const navbar = document.getElementById('mainNavbar');
+                    let scrolled = false;
+                    
+                    function updateNavbar() {
+                        const scrollTop = window.pageYOffset;
+                        
+                        if (scrollTop > 50 && !scrolled) {
+                            navbar.style.background = 'rgba(30, 41, 59, 0.98)';
+                            navbar.style.backdropFilter = 'blur(20px)';
+                            navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+                            scrolled = true;
+                        } else if (scrollTop <= 50 && scrolled) {
+                            navbar.style.background = 'rgba(30, 41, 59, 0.95)';
+                            navbar.style.backdropFilter = 'blur(20px)';
+                            navbar.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+                            scrolled = false;
+                        }
+                    }
+                    
+                    // Throttled scroll handler
+                    let ticking = false;
+                    window.addEventListener('scroll', function() {
+                        if (!ticking) {
+                            requestAnimationFrame(function() {
+                                updateNavbar();
+                                ticking = false;
+                            });
+                            ticking = true;
                         }
                     });
-                }, {
-                    threshold: 0.1,
-                    rootMargin: '0px 0px -50px 0px'
-                });
-
-                document.querySelectorAll('.scroll-reveal, .info-card').forEach(el => {
-                    observer.observe(el);
-                });
-            }
-
-            // Efecto de tapado de imágenes flotantes
-            function updateFloatingImages() {
-                const scrolled = window.pageYOffset;
-                const floatingImages = document.getElementById('floatingImages');
-                const heroHeight = window.innerHeight;
-                
-                if (floatingImages) {
-                    // Calcular opacidad basada en el scroll
-                    const scrollPercent = Math.min(scrolled / (heroHeight * 0.8), 1);
-                    const opacity = Math.max(0.9 - scrollPercent, 0);
                     
-                    // Aplicar opacidad y transformación
-                    floatingImages.style.opacity = opacity;
+                    // Active link highlighting
+                    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+                    const sections = document.querySelectorAll('section[id]');
                     
-                    // Mover las imágenes ligeramente hacia afuera conforme se hace scroll
-                    const images = floatingImages.querySelectorAll('.floating-image');
-                    images.forEach((img, index) => {
-                        const isLeft = img.classList.contains('left-top') || 
-                                      img.classList.contains('left-middle') || 
-                                      img.classList.contains('left-bottom');
+                    function highlightActiveSection() {
+                        const scrollPosition = window.pageYOffset + 100;
                         
-                        const moveDistance = scrollPercent * 50;
-                        const translateX = isLeft ? -moveDistance : moveDistance;
-                        
-                        img.style.transform = img.style.transform.replace(/translateX$$[^)]*$$/, '') + 
-                                            ` translateX(${translateX}px)`;
-                    });
-                }
-            }
-
-            // Efecto sutil en imagen de fondo
-            function updateBackground() {
-                const scrolled = window.pageYOffset;
-                const heroBackground = document.getElementById('heroBackground');
-                
-                if (heroBackground) {
-                    const scrollPercent = Math.min(scrolled / window.innerHeight, 1);
-                    const opacity = 0.15 - (scrollPercent * 0.1);
-                    heroBackground.style.opacity = Math.max(opacity, 0.05);
-                }
-            }
-
-            // Navbar scroll effect
-            function updateNavbar() {
-                const navbar = document.getElementById('mainNavbar');
-                if (window.pageYOffset > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            }
-
-            // Scroll listeners optimizados
-            let ticking = false;
-            window.addEventListener('scroll', function() {
-                if (!ticking) {
-                    requestAnimationFrame(function() {
-                        updateFloatingImages();
-                        updateBackground();
-                        updateNavbar();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-
-            // Smooth scroll
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
+                        sections.forEach(section => {
+                            const sectionTop = section.offsetTop;
+                            const sectionHeight = section.offsetHeight;
+                            const sectionId = section.getAttribute('id');
+                            
+                            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                                navLinks.forEach(link => {
+                                    link.classList.remove('active');
+                                    if (link.getAttribute('href') === `#${sectionId}`) {
+                                        link.classList.add('active');
+                                    }
+                                });
+                            }
                         });
                     }
+                    
+                    window.addEventListener('scroll', highlightActiveSection);
+                }
+                
+                // ===== ANIMACIONES DEL HERO =====
+                function initializeHeroAnimations() {
+                    const heroElements = [
+                        '.hero-badge',
+                        '.hero-title',
+                        '.hero-subtitle',
+                        '.hero-stats',
+                        '.hero-actions'
+                    ];
+                    
+                    // Trigger animations on load
+                    setTimeout(() => {
+                        heroElements.forEach((selector, index) => {
+                            const element = document.querySelector(selector);
+                            if (element) {
+                                element.style.animationDelay = `${0.2 + index * 0.2}s`;
+                                element.classList.add('animate-fade-in');
+                            }
+                        });
+                    }, 100);
+                    
+                    // Typing effect for title
+                    const titleMain = document.querySelector('.title-main');
+                    if (titleMain) {
+                        const text = titleMain.textContent;
+                        titleMain.textContent = '';
+                        titleMain.style.borderRight = '2px solid #3b82f6';
+                        
+                        let i = 0;
+                        const typeWriter = () => {
+                            if (i < text.length) {
+                                titleMain.textContent += text.charAt(i);
+                                i++;
+                                setTimeout(typeWriter, 150);
+                            } else {
+                                setTimeout(() => {
+                                    titleMain.style.borderRight = 'none';
+                                }, 500);
+                            }
+                        };
+                        
+                        setTimeout(typeWriter, 800);
+                    }
+                }
+                
+                // ===== CONTADORES ANIMADOS =====
+                function initializeCounters() {
+                    const counters = document.querySelectorAll('.stat-number[data-target]');
+                    const observerOptions = {
+                        threshold: 0.7,
+                        rootMargin: '0px 0px -50px 0px'
+                    };
+                    
+                    const counterObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                animateCounter(entry.target);
+                                counterObserver.unobserve(entry.target);
+                            }
+                        });
+                    }, observerOptions);
+                    
+                    counters.forEach(counter => {
+                        counterObserver.observe(counter);
+                    });
+                    
+                    function animateCounter(element) {
+                        const target = parseInt(element.getAttribute('data-target'));
+                        const duration = 2000;
+                        const increment = target / (duration / 16);
+                        let current = 0;
+                        
+                        const updateCounter = () => {
+                            current += increment;
+                            if (current < target) {
+                                element.textContent = Math.floor(current);
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                element.textContent = target;
+                            }
+                        };
+                        
+                        updateCounter();
+                    }
+                }
+                
+                // ===== TARJETAS DE CARACTERÍSTICAS INTERACTIVAS =====
+                function initializeFeatureCards() {
+                    const featureCards = document.querySelectorAll('.feature-card');
+                    
+                    featureCards.forEach(card => {
+                        // Hover effect with 3D transform
+                        card.addEventListener('mouseenter', function() {
+                            this.style.transform = 'translateY(-8px) rotateX(2deg) rotateY(2deg)';
+                            this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                            
+                            // Icon animation
+                            const icon = this.querySelector('.feature-icon');
+                            if (icon) {
+                                icon.style.transform = 'scale(1.1) rotate(5deg)';
+                                icon.style.transition = 'all 0.3s ease';
+                            }
+                            
+                            // Metric animation
+                            const metrics = this.querySelectorAll('.metric-value');
+                            metrics.forEach((metric, index) => {
+                                setTimeout(() => {
+                                    metric.style.transform = 'scale(1.1)';
+                                    metric.style.color = '#3b82f6';
+                                }, index * 100);
+                            });
+                        });
+                        
+                        card.addEventListener('mouseleave', function() {
+                            this.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
+                            
+                            const icon = this.querySelector('.feature-icon');
+                            if (icon) {
+                                icon.style.transform = 'scale(1) rotate(0deg)';
+                            }
+                            
+                            const metrics = this.querySelectorAll('.metric-value');
+                            metrics.forEach(metric => {
+                                metric.style.transform = 'scale(1)';
+                                metric.style.color = '#3b82f6';
+                            });
+                        });
+                        
+                        // Click effect
+                        card.addEventListener('click', function() {
+                            this.style.transform = 'scale(0.98)';
+                            setTimeout(() => {
+                                this.style.transform = 'translateY(-8px)';
+                            }, 150);
+                            
+                            // Show feature details (could be expanded)
+                            showFeatureDetails(this.getAttribute('data-feature'));
+                        });
+                    });
+                    
+                    function showFeatureDetails(featureType) {
+                        const featureData = {
+                            reportes: {
+                                title: 'Gestión Avanzada de Reportes',
+                                description: 'Sistema completo para el manejo de incidencias con seguimiento en tiempo real.',
+                                features: ['Reportes automáticos', 'Seguimiento en tiempo real', 'Notificaciones push']
+                            },
+                            equipos: {
+                                title: 'Control Inteligente de Equipos',
+                                description: 'Inventario digital con predicción de mantenimiento basada en IA.',
+                                features: ['Inventario automatizado', 'Mantenimiento predictivo', 'QR Code tracking']
+                            },
+                            estadisticas: {
+                                title: 'Analytics Empresarial',
+                                description: 'Dashboards interactivos con inteligencia de negocios integrada.',
+                                features: ['Dashboards en tiempo real', 'Exportación automática', 'Análisis predictivo']
+                            },
+                            ambientes: {
+                                title: 'Gestión Inteligente de Espacios',
+                                description: 'Optimización de espacios formativos con algoritmos de eficiencia.',
+                                features: ['Programación automática', 'Optimización de recursos', 'Control de aforo']
+                            }
+                        };
+                        
+                        const data = featureData[featureType];
+                        if (data && typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                title: data.title,
+                                html: `
+                                    <div style="text-align: left; margin: 20px 0;">
+                                        <p style="color: #64748b; margin-bottom: 15px;">${data.description}</p>
+                                        <h4 style="color: #1e293b; margin-bottom: 10px;">Características principales:</h4>
+                                        <ul style="color: #475569;">
+                                            ${data.features.map(feature => `<li style="margin-bottom: 5px;">${feature}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                `,
+                                icon: 'info',
+                                confirmButtonText: 'Entendido',
+                                confirmButtonColor: '#3b82f6',
+                                customClass: {
+                                    popup: 'feature-modal'
+                                }
+                            });
+                        }
+                    }
+                }
+                
+                // ===== SCROLL SUAVE Y NAVEGACIÓN =====
+                function initializeSmoothScroll() {
+                    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                        anchor.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            const targetId = this.getAttribute('href');
+                            const targetElement = document.querySelector(targetId);
+                            
+                            if (targetElement) {
+                                const headerOffset = 80;
+                                const elementPosition = targetElement.offsetTop;
+                                const offsetPosition = elementPosition - headerOffset;
+                                
+                                window.scrollTo({
+                                    top: offsetPosition,
+                                    behavior: 'smooth'
+                                });
+                                
+                                // Update URL without jumping
+                                history.pushState(null, null, targetId);
+                            }
+                        });
+                    });
+                }
+                
+                // ===== ANIMACIONES DE SCROLL =====
+                function initializeScrollAnimations() {
+                    const observerOptions = {
+                        threshold: 0.1,
+                        rootMargin: '0px 0px -50px 0px'
+                    };
+                    
+                    const scrollObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('animate-fade-in');
+                                
+                                // Staggered animation for child elements
+                                const children = entry.target.querySelectorAll('.feature-card, .tech-feature, .sena-stat');
+                                children.forEach((child, index) => {
+                                    setTimeout(() => {
+                                        child.style.opacity = '1';
+                                        child.style.transform = 'translateY(0)';
+                                    }, index * 100);
+                                });
+                            }
+                        });
+                    }, observerOptions);
+                    
+                    // Observe sections for animations
+                    document.querySelectorAll('section, .feature-card, .tech-feature').forEach(el => {
+                        scrollObserver.observe(el);
+                    });
+                    
+                    // Prepare elements for animation
+                    document.querySelectorAll('.feature-card, .tech-feature').forEach(el => {
+                        el.style.opacity = '0';
+                        el.style.transform = 'translateY(30px)';
+                        el.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    });
+                }
+                
+                // ===== EFECTO PARALLAX SUTIL =====
+                function initializeParallax() {
+                    const parallaxElements = document.querySelectorAll('.hero-pattern, .tech-circle');
+                    
+                    let ticking = false;
+                    
+                    function updateParallax() {
+                        const scrolled = window.pageYOffset;
+                        const rate = scrolled * -0.3;
+                        const rateRotate = scrolled * 0.1;
+                        
+                        parallaxElements.forEach((element, index) => {
+                            if (element.classList.contains('hero-pattern')) {
+                                element.style.transform = `translateY(${rate}px) rotate(${rateRotate}deg)`;
+                            } else if (element.classList.contains('tech-circle')) {
+                                element.style.transform = `translateY(${rate * 0.5}px)`;
+                            }
+                        });
+                        
+                        ticking = false;
+                    }
+                    
+                    window.addEventListener('scroll', function() {
+                        if (!ticking) {
+                            requestAnimationFrame(updateParallax);
+                            ticking = true;
+                        }
+                    });
+                }
+                
+                // ===== LAZY LOADING DE IMÁGENES =====
+                function initializeLazyLoading() {
+                    if ('IntersectionObserver' in window) {
+                        const imageObserver = new IntersectionObserver((entries, observer) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    const img = entry.target;
+                                    img.src = img.dataset.src;
+                                    img.classList.remove('lazy');
+                                    imageObserver.unobserve(img);
+                                }
+                            });
+                        });
+                        
+                        document.querySelectorAll('img[data-src]').forEach(img => {
+                            imageObserver.observe(img);
+                        });
+                    }
+                }
+                
+                // ===== MANEJO DE FORMULARIOS =====
+                function initializeForms() {
+                    const forms = document.querySelectorAll('form');
+                    
+                    forms.forEach(form => {
+                        form.addEventListener('submit', function(e) {
+                            const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+                            
+                            if (submitBtn) {
+                                const originalText = submitBtn.innerHTML;
+                                submitBtn.disabled = true;
+                                submitBtn.innerHTML = `
+                                    <i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>
+                                    Procesando...
+                                `;
+                                
+                                // Restore button after 3 seconds (fallback)
+                                setTimeout(() => {
+                                    if (submitBtn.disabled) {
+                                        submitBtn.disabled = false;
+                                        submitBtn.innerHTML = originalText;
+                                    }
+                                }, 3000);
+                            }
+                        });
+                    });
+                }
+                
+                // ===== NOTIFICACIONES Y ALERTAS =====
+                function initializeNotifications() {
+                    // Global notification system
+                    window.SIBAF = window.SIBAF || {};
+                    
+                    window.SIBAF.notify = function(message, type = 'success', duration = 4000) {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: duration,
+                                timerProgressBar: true,
+                                icon: type,
+                                title: message,
+                                background: type === 'success' ? '#f0f9ff' : '#fef2f2',
+                                color: type === 'success' ? '#1e40af' : '#dc2626',
+                                customClass: {
+                                    popup: 'professional-toast'
+                                }
+                            });
+                        } else {
+                            // Fallback notification
+                            createFallbackNotification(message, type, duration);
+                        }
+                    };
+                    
+                    window.SIBAF.confirm = function(title, message, callback) {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                title: title,
+                                text: message,
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3b82f6',
+                                cancelButtonColor: '#ef4444',
+                                confirmButtonText: 'Confirmar',
+                                cancelButtonText: 'Cancelar',
+                                customClass: {
+                                    popup: 'professional-confirm'
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed && callback) {
+                                    callback();
+                                }
+                            });
+                        }
+                    };
+                    
+                    function createFallbackNotification(message, type, duration) {
+                        const notification = document.createElement('div');
+                        notification.className = `notification notification-${type}`;
+                        notification.style.cssText = `
+                            position: fixed;
+                            top: 20px;
+                            right: 20px;
+                            background: ${type === 'success' ? '#3b82f6' : '#ef4444'};
+                            color: white;
+                            padding: 1rem 1.5rem;
+                            border-radius: 0.5rem;
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                            z-index: 10000;
+                            font-family: inherit;
+                            font-weight: 500;
+                            transform: translateX(100%);
+                            transition: transform 0.3s ease;
+                        `;
+                        notification.textContent = message;
+                        
+                        document.body.appendChild(notification);
+                        
+                        setTimeout(() => {
+                            notification.style.transform = 'translateX(0)';
+                        }, 100);
+                        
+                        setTimeout(() => {
+                            notification.style.transform = 'translateX(100%)';
+                            setTimeout(() => {
+                                document.body.removeChild(notification);
+                            }, 300);
+                        }, duration);
+                    }
+                }
+                
+                // ===== PERFORMANCE OPTIMIZATION =====
+                function initializePerformance() {
+                    // Prefetch important routes
+                    const importantLinks = document.querySelectorAll('a[href*="login"], a[href*="admin"], a[href*="soporte"], a[href*="instructor"]');
+                    importantLinks.forEach(link => {
+                        link.addEventListener('mouseenter', function() {
+                            const linkEl = document.createElement('link');
+                            linkEl.rel = 'prefetch';
+                            linkEl.href = this.href;
+                            document.head.appendChild(linkEl);
+                        });
+                    });
+                    
+                    // Lazy load non-critical CSS
+                    const nonCriticalCSS = document.querySelectorAll('link[rel="stylesheet"][data-lazy]');
+                    nonCriticalCSS.forEach(css => {
+                        const media = css.getAttribute('media');
+                        css.setAttribute('media', 'none');
+                        css.onload = function() {
+                            this.setAttribute('media', media || 'all');
+                        };
+                    });
+                }
+                
+                // ===== ACCESSIBILITY ENHANCEMENTS =====
+                function initializeAccessibility() {
+                    // Skip to main content
+                    const skipLink = document.createElement('a');
+                    skipLink.href = '#main-content';
+                    skipLink.textContent = 'Saltar al contenido principal';
+                    skipLink.className = 'skip-link';
+                    skipLink.style.cssText = `
+                        position: absolute;
+                        top: -40px;
+                        left: 6px;
+                        background: #000;
+                        color: white;
+                        padding: 8px;
+                        text-decoration: none;
+                        z-index: 100000;
+                        border-radius: 4px;
+                    `;
+                    skipLink.addEventListener('focus', function() {
+                        this.style.top = '6px';
+                    });
+                    skipLink.addEventListener('blur', function() {
+                        this.style.top = '-40px';
+                    });
+                    
+                    document.body.insertBefore(skipLink, document.body.firstChild);
+                    
+                    // Enhanced keyboard navigation
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Tab') {
+                            document.body.classList.add('keyboard-navigation');
+                        }
+                    });
+                    
+                    document.addEventListener('mousedown', function() {
+                        document.body.classList.remove('keyboard-navigation');
+                    });
+                }
+                
+                // ===== INICIALIZAR MÓDULOS ADICIONALES =====
+                initializeForms();
+                initializeNotifications();
+                initializePerformance();
+                initializeAccessibility();
+                
+                // ===== DEBUG MODE (Solo desarrollo) =====
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    console.log('🔧 Debug mode enabled');
+                    window.SIBAF.debug = true;
+                    
+                    // Performance metrics
+                    window.addEventListener('load', function() {
+                        setTimeout(() => {
+                            const navTiming = performance.getEntriesByType('navigation')[0];
+                            console.log(`📊 Page load time: ${Math.round(navTiming.loadEventEnd - navTiming.fetchStart)}ms`);
+                        }, 0);
+                    });
+                }
+                
+                // ===== CLEANUP ON UNLOAD =====
+                window.addEventListener('beforeunload', function() {
+                    // Remove event listeners
+                    window.removeEventListener('scroll', updateNavbar);
+                    window.removeEventListener('scroll', highlightActiveSection);
+                    
+                    console.log('🧹 SIBAF System cleaned up');
                 });
+                
+                // ===== SYSTEM READY =====
+                setTimeout(() => {
+                    document.body.classList.add('system-ready');
+                    console.log('🎉 SIBAF Professional System Ready!');
+                    
+                    // Optional: Show welcome message
+                    if (window.SIBAF && window.SIBAF.debug) {
+                        window.SIBAF.notify('Sistema SIBAF cargado correctamente', 'success', 2000);
+                    }
+                }, 500);
             });
-        });
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>
