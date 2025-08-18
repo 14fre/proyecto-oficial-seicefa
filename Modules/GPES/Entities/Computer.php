@@ -23,6 +23,7 @@ class Computer extends Model
         'operating_system',
         'status_assignment_formation',
         'status_assignment_day',
+        'image'
     ];
 
     public function element()

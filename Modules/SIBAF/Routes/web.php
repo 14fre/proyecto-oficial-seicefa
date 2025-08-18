@@ -25,13 +25,16 @@ Route::middleware(['lang'])->group(function () {
         Route::get('/soporte/welcomesoporte', [SIBAFController::class, 'supportPanel'])->name('sibaf.soporte.welcomesoporte');
         Route::get('/instructor/masterinstructor', [SIBAFController::class, 'instructor'])->name('sibaf.instructor.masterinstructor');
         Route::get('/instructor/inventoriesINS', [SIBAFController::class, 'instructor'])->name('sibaf.instructor.inventoriesINS');
+        
     });
 });
 
 Route::middleware(['auth'])->group(function () {
     // Rutas para admin
     Route::get('/admin/inventories', [InventoryController::class, 'index'])->name('admin.sibaf.inventory.index');
-
+    Route::get('/admin/equipment_tracking', [InventoryController::class, 'equipmentTracking'])->name('admin.sibaf.equipment_tracking.index');
+    Route::get('/admin/damage_reports_tracking', [\Modules\SIBAF\Http\Controllers\EquipmentTrackingController::class, 'index'])->name('admin.sibaf.damage_reports_tracking.index');
+    
     // Rutas para instructor
     Route::get('/instructor/inventories', [InventoryController::class, 'index'])->name('instructor.sibaf.inventory.index');
 

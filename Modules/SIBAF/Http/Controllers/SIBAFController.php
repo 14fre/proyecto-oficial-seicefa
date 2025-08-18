@@ -16,7 +16,7 @@ class SIBAFController extends Controller
     {
         return view('sibaf::index');
         return view('sibaf::inventories');
-        
+        return view('sibaf::equipment_tracking');
     }
 
     public function welcome()
@@ -60,19 +60,32 @@ class SIBAFController extends Controller
             'notificationsCount'
         ));
     }
+    
     public function soporte()
     {
         return view('sibaf::welcomesoporte');
     }
 
-    public function supportPanel()
+    public function supportPanel(Request $request)
     {
         $damageReports = \Modules\SIBAF\Entities\DamageReport::with(['inventory', 'user', 'movement'])
             ->whereHas('movement', function($q) {
                 $q->where('state', 'Solicitado');
             })
             ->get();
-        return view('sibaf::welcomesoporte', compact('damageReports'));
+        
+        // Obtener el reporte pasado desde la redirección (si existe)
+        $report = $request->session()->get('report');
+
+        // Si no hay reporte en la sesión, obtener el último reporte con estado "Arreglado" como respaldo
+        if (!$report) {
+            $report = \Modules\SIBAF\Entities\DamageReport::with(['inventory', 'user', 'movement'])
+                ->where('state', 'Arreglado')
+                ->latest()
+                ->first();
+        }
+
+        return view('sibaf::welcomesoporte', compact('damageReports', 'report'));
     }
 
     public function instructor()
@@ -80,7 +93,6 @@ class SIBAFController extends Controller
         return view('sibaf::masterinstructor');
         return view('sibaf::inventoriesINS');
     }
-    
 
     /**
      * Show the form for creating a new resource.
@@ -90,8 +102,6 @@ class SIBAFController extends Controller
     {
         return view('sibaf::create');
     }
-
-    
 
     /**
      * Store a newly created resource in storage.

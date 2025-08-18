@@ -18,6 +18,7 @@ class DamageReport extends Model
         'state',
         'movement_id',
         'photo_path',
+        'action_detail', // Nuevo campo para almacenar el detalle de la acción
     ];
 
     public function inventory()

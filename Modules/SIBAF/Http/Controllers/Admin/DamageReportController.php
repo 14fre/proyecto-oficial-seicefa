@@ -110,6 +110,11 @@ class DamageReportController extends Controller
         $admin = $this->getAdmin();
 
         if ($action === 'arreglo') {
+            // Validar que se proporcione el detalle del arreglo
+            $request->validate([
+                'arreglo_reason' => 'required|string|max:500',
+            ]);
+
             if ($report->movement) {
                 $newState = 'Arreglado';
                 if (!in_array($newState, ['Solicitado', 'Aprobado', 'Anulado', 'Baja', 'Arreglado'])) {
@@ -128,6 +133,7 @@ class DamageReportController extends Controller
                 $computer->save();
             }
             $report->state = 'Arreglado';
+            $report->action_detail = $request->input('arreglo_reason'); // Guardar el detalle del arreglo
             $report->save();
 
             if ($admin) {
@@ -171,6 +177,7 @@ class DamageReportController extends Controller
                 $computer->save();
             }
             $report->state = 'Baja';
+            $report->action_detail = 'Equipo dado de baja con archivos Excel subidos'; // Detalle de la acción
             $report->save();
             $downgrade = ComputerDowngrade::create([
                 'inventory_id' => $inventory ? $inventory->id : null,
@@ -201,6 +208,9 @@ class DamageReportController extends Controller
             if ($admin) {
                 $admin->notify(new ComputerDowngradeApprovedNotification($downgrade));
             }
+            
+            // Enviar notificación por email al admin y soporte
+            SupportNotificationService::notifyAdminComputerDowngrade($downgrade, $report);
 
             return redirect()->back()->with('success', 'Reporte aprobado para baja. Archivos subidos, equipo dado de baja, registro creado y admin notificado.');
         }
@@ -214,6 +224,7 @@ class DamageReportController extends Controller
             $inventory->save();
         }
         $report->state = 'Aprobado';
+        $report->action_detail = 'Reporte aprobado sin acción específica'; // Detalle de la acción
         $report->save();
 
         if ($admin) {
@@ -238,6 +249,20 @@ class DamageReportController extends Controller
     {
         $report = DamageReport::with(['movement', 'user.person'])->findOrFail($id);
 
+        // Guardar el detalle del rechazo antes de eliminar
+        $rejectionReason = request()->input('rechazo_reason', 'Rechazado sin especificar razón');
+        
+        // Crear un registro de seguimiento antes de eliminar
+        $trackingReport = DamageReport::create([
+            'inventory_id' => $report->inventory_id,
+            'user_id' => $report->user_id,
+            'description' => $report->description,
+            'state' => 'Rechazado',
+            'movement_id' => null, // No hay movimiento para rechazos
+            'photo_path' => $report->photo_path,
+            'action_detail' => $rejectionReason, // Guardar la razón del rechazo
+        ]);
+
         if ($report->movement) {
             $report->movement->delete();
         }
@@ -245,16 +270,16 @@ class DamageReportController extends Controller
         $admin = $this->getAdmin();
 
         if ($admin) {
-            $usuario = $report->user->person->full_name ?? ($report->user->nickname ?? ($report->user->name ?? 'N/A'));
+            $usuario = $trackingReport->user->person->full_name ?? ($trackingReport->user->nickname ?? ($trackingReport->user->name ?? 'N/A'));
             Notification::create([
                 'user_id' => $admin->id, // <-- CORREGIDO: La notificación es para el admin
                 'notifiable_type' => DamageReport::class,
-                'notifiable_id' => $report->id,
+                'notifiable_id' => $trackingReport->id,
                 'data' => [
                     'type' => 'rechazo',
-                    'equipo' => $report->inventory->element->name ?? 'N/A',
+                    'equipo' => $trackingReport->inventory->element->name ?? 'N/A',
                     'usuario' => $usuario,
-                    'message' => "El reporte de daño para el equipo {$report->inventory->element->name} ha sido rechazado."
+                    'message' => "El reporte de daño para el equipo {$trackingReport->inventory->element->name} ha sido rechazado."
                 ],
                 'statusNotification' => 'pending'
             ]);

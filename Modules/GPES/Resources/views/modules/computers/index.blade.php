@@ -39,6 +39,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-dark">
                         <tr>
+                            <th>Imagen</th>
                             <th>Nombre</th>
                             <th>Número de Serie</th>
                             <th>Marca</th>
@@ -49,30 +50,56 @@
                     </thead>
                     <tbody>
                         @foreach ($elements as $element)
+                            @php
+                                $computer = $element->computers ?? null;
+                            @endphp
                             <tr>
-                                <td>{{ $element->computers->name ?? 'Computador eliminado' }}</td>
-                                <td>{{ $element->computers->serial_number ?? '-' }}</td>
-                                <td>{{ $element->computers->brand ?? '-' }}</td>
-                                <td>{{ $element->computers->model ?? '-' }}</td>
+                                {{-- Imagen --}}
+                                <td>
+                                    @if ($computer && $computer->image)
+                                        <img src="{{ asset('storage/' . $computer->image) }}" alt="Imagen del computador"
+                                            class="img-thumbnail" style="width: 60px; height: auto;">
+                                    @else
+                                        <span class="text-muted">Sin imagen</span>
+                                    @endif
+                                </td>
+
+                                {{-- Nombre --}}
+                                <td>{{ $computer->name ?? 'Computador eliminado' }}</td>
+
+                                {{-- Número de serie --}}
+                                <td>{{ $computer->serial_number ?? '-' }}</td>
+
+                                {{-- Marca --}}
+                                <td>{{ $computer->brand ?? '-' }}</td>
+
+                                {{-- Modelo --}}
+                                <td>{{ $computer->model ?? '-' }}</td>
+
+                                {{-- Bodega --}}
                                 <td>
                                     @php
-                                        $inventory = \Modules\SICA\Entities\Inventory::where('element_id', $element->id)->first();
-                                        $warehouse = $inventory ? ($inventory->productive_unit_warehouse->warehouse->name ?? '-') : '-';
+                                        $inventory = \Modules\SICA\Entities\Inventory::where(
+                                            'element_id',
+                                            $element->id,
+                                        )->first();
+                                        $warehouse = $inventory
+                                            ? $inventory->productive_unit_warehouse->warehouse->name ?? '-'
+                                            : '-';
                                     @endphp
                                     {{ $warehouse }}
                                 </td>
+
+                                {{-- Acciones --}}
                                 <td class="text-end">
-                                    {{-- Botón Editar --}}
-                                    <a href="{{ route('gpes.cuentadante.computers.edit', $element->id) }}" 
-                                       class="btn btn-sm btn-outline-warning me-1" 
-                                       title="Editar">
+                                    <a href="{{ route('gpes.cuentadante.computers.edit', $element->id) }}"
+                                        class="btn btn-sm btn-outline-warning me-1" title="Editar">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
 
-                                    {{-- Botón Eliminar --}}
                                     <button class="btn btn-sm btn-outline-danger"
-                                            onclick="showDeleteModal('{{ route('gpes.cuentadante.computers.destroy', $element->id) }}')"
-                                            title="Eliminar">
+                                        onclick="showDeleteModal('{{ route('gpes.cuentadante.computers.destroy', $element->id) }}')"
+                                        title="Eliminar">
                                         <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </td>
@@ -80,6 +107,7 @@
                         @endforeach
                     </tbody>
                 </table>
+
             </div>
         @endif
     </div>
@@ -109,8 +137,10 @@
     <style>
         .modal {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0, 0, 0, 0.6);
             display: none;
             justify-content: center;

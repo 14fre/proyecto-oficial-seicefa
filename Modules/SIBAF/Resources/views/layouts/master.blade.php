@@ -219,9 +219,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-question-circle"></i>
-                                <p>Ayuda</p>
+                            <a href="{{ route('admin.sibaf.damage_reports_tracking.index') }}" class="nav-link {{ Route::is('admin.sibaf.damage_reports_tracking.index') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-clipboard-list"></i>
+                                <p>Seguimientos</p>
                             </a>
                         </li>
                     </ul>

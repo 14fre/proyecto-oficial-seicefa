@@ -25,6 +25,7 @@ class CreateComputersTable extends Migration
             $table->string('operating_system')->nullable();
             $table->enum('status_assignment_formation', ['disponible', 'asignado'])->default('disponible'); // esta columna es para indicar si el computador esta siendo ocupado en el dia
             $table->enum('status_assignment_day',["disponible","asignado"])->default('disponible'); // ocupado a largo plazo
+             $table->string('image')->nullable();
             $table->timestamps();
         });
     }

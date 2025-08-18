@@ -53,6 +53,7 @@
                         <thead class="thead-dark text-center">
                             <tr>
                                 <th>ID</th>
+                                <th><i class="fas fa-image"></i> Imagen</th> <!-- NUEVO -->
                                 <th><i class="fas fa-desktop"></i> Nombre</th>
                                 <th><i class="fas fa-barcode"></i> Serie</th>
                                 <th><i class="fas fa-industry"></i> Marca</th>
@@ -70,6 +71,15 @@
                             @forelse ($inventories as $inventory)
                                 <tr>
                                     <td class="text-center font-weight-bold">{{ $inventory->id }}</td>
+                                    <td class="text-center"> <!-- NUEVO -->
+                                        @if($inventory->computer && $inventory->computer->image)
+                                            <img src="{{ asset('storage/'.$inventory->computer->image) }}" 
+                                                 alt="Imagen del computador" 
+                                                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                        @else
+                                            <span class="text-muted">Sin imagen</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $inventory->computer->name ?? 'N/A' }}</td>
                                     <td>{{ $inventory->computer->serial_number ?? 'N/A' }}</td>
                                     <td>{{ $inventory->computer->brand ?? 'N/A' }}</td>
@@ -139,6 +149,16 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row">
+                                                    <!-- NUEVO: Imagen en el modal -->
+                                                    <div class="col-md-12 mb-3 text-center">
+                                                        @if($inventory->computer && $inventory->computer->image)
+                                                            <img src="{{ asset('storage/'.$inventory->computer->image) }}" 
+                                                                 alt="Imagen del computador" 
+                                                                 style="max-width: 200px; max-height: 200px; object-fit: cover; border-radius: 12px;">
+                                                        @else
+                                                            <span class="text-muted">Sin imagen</span>
+                                                        @endif
+                                                    </div>
                                                     <div class="col-md-6 mb-3">
                                                         <span class="font-weight-bold"><i class="fas fa-desktop"></i> Nombre:</span>
                                                         <span class="ml-2">{{ $inventory->computer->name ?? 'N/A' }}</span>
@@ -260,7 +280,7 @@
                                 </div>
                             @empty
                                 <tr>
-                                    <td colspan="12" class="text-center">No hay computadores disponibles.</td>
+                                    <td colspan="13" class="text-center">No hay computadores disponibles.</td> <!-- actualizado a 13 -->
                                 </tr>
                             @endforelse
                         </tbody>

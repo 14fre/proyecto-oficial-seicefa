@@ -38,17 +38,33 @@ class ElementController extends Controller
 
     public function index()
     {
-        $elements = Element::with(['category', 'measurement_unit', 'Computers'])
+        $elements = Element::with([
+            'category',
+            'measurement_unit',
+            'Computers' => function ($query) {
+                $query->select(
+                    'id',
+                    'element_id',
+                    'name',
+                    'serial_number',
+                    'model',
+                    'brand',
+                    'processor',
+                    'ram',
+                    'operating_system',
+                    'image' // Cargar campo de imagen
+                );
+            }
+        ])
             ->whereHas('category', function ($query) {
                 $query->where('name', 'Computers');
             })
             ->orderBy('name', 'ASC')
             ->get();
 
-          
-
         return view('gpes::modules.computers.index', compact('elements'));
     }
+
 
     public function create()
     {
@@ -95,17 +111,18 @@ class ElementController extends Controller
             'ram' => 'nullable|string|max:255',
             'operating_system' => 'nullable|string|max:255',
             'warehouse_id' => 'required|exists:productive_unit_warehouses,id',
+            'image' => 'required',
         ]);
 
         // Contar computadores para generar nombre dinámico
-      
+
         $numberComputer = null;
-        while(True){
+        while (True) {
             $numberComputer = Element::whereHas('category', function ($query) {
                 $query->where('name', 'Computers');
             })->count() + mt_rand(10000000, 99999999);
 
-            if(! Element::where("name", "computer ". $numberComputer)->first() ){
+            if (! Element::where("name", "computer " . $numberComputer)->first()) {
                 break;
             }
         }
@@ -124,6 +141,12 @@ class ElementController extends Controller
                 'slug' => Str::slug('Computer ' . $numberComputer),
             ]);
 
+            // Guardar imagen en storage/public/computers
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('computers', 'public');
+            }
+
             // Crear computador
             $computer = Computer::create([
                 'name' => $validated['name'],
@@ -134,7 +157,9 @@ class ElementController extends Controller
                 'processor' => $validated['processor'],
                 'ram' => $validated['ram'],
                 'operating_system' => $validated['operating_system'],
+                'image' => $imagePath, // Guardamos la ruta
             ]);
+
 
             // Crear registro de inventario
             $inventory = Inventory::create([
@@ -199,7 +224,7 @@ class ElementController extends Controller
         }
     }
 
-  public function edit($id)
+    public function edit($id)
     {
         // Obtener el elemento por ID
         $element = Element::with('computers', 'inventories')->findOrFail($id);
@@ -252,7 +277,7 @@ class ElementController extends Controller
             $computer = $element->computers;
             $inventory = $element->inventories;
 
-         
+
             // Actualizar el elemento
             $element->update([
                 'measurement_unit_id' => $validated['measurement_unit_id'],
@@ -263,7 +288,7 @@ class ElementController extends Controller
                 'slug' => Str::slug($element->name),
             ]);
 
-       
+
 
             // Actualizar el computador
             $computer->update([
@@ -294,12 +319,12 @@ class ElementController extends Controller
             //     'expiration_date' => null, // No aplica para computadores
             //     'stock' => 1, // Inicialmente 1 computador  
             // ]);
-           
+
             // Actualizar el inventario
 
 
             $inventory = Inventory::where('element_id', $element->id)->firstOrFail();
-          
+
             $inventory->update([
                 'productive_unit_warehouse_id' => $validated['warehouse_id'],
                 'price' => $validated['price'] ?? 0,
@@ -308,11 +333,11 @@ class ElementController extends Controller
             ]);
 
 
-            
+
             // Registrar movimiento de actualización (opcional, para trazabilidad)
             $movementType = MovementType::where('name', 'Movimiento Interno')->first();
 
-            
+
 
             $current_datetime = now()->milliseconds(0);
 
@@ -347,7 +372,7 @@ class ElementController extends Controller
             $movementType->update(['consecutive' => $movementType->consecutive + 1]);
             $movement->update(['voucher_number' => $movementType->consecutive]);
 
-   
+
             DB::commit();
 
             return redirect()->route('gpes.cuentadante.computers.index')

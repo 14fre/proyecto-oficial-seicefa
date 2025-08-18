@@ -24,7 +24,11 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('gpes.cuentadante.computers.store') }}" class="needs-validation bg-white p-4 rounded shadow-sm border-top border-3 border-primary" novalidate>
+        <form method="POST"
+              action="{{ route('gpes.cuentadante.computers.store') }}"
+              class="needs-validation bg-white p-4 rounded shadow-sm border-top border-3 border-primary"
+              enctype="multipart/form-data"
+              novalidate>
             @csrf
 
             <!-- Sección General -->
@@ -102,6 +106,25 @@
                     @error('operating_system')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Sección Imagen -->
+            <h5 class="mb-3 text-secondary"><i class="bi bi-image me-1"></i>Imagen del Equipo</h5>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="image" class="form-label fw-semibold">Seleccionar imagen</label>
+                    <input type="file"
+                           class="form-control @error('image') is-invalid @enderror"
+                           id="image"
+                           name="image"
+                           accept="image/*">
+                    @error('image')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                    <div class="form-text">Formatos permitidos: JPG, PNG, WEBP. Tamaño máximo según configuración del servidor.</div>
                 </div>
             </div>
 

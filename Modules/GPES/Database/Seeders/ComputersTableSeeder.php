@@ -127,6 +127,7 @@ class ComputersTableSeeder extends Seeder
                     'processor' => $computerData['computer']['processor'],
                     'ram' => $computerData['computer']['ram'],
                     'operating_system' => $computerData['computer']['operating_system'],
+                    'image' => null,
                    
                     
                 ]);
