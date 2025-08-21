@@ -20,38 +20,47 @@
             padding: 15px;
             text-align: center;
         }
+
         .card-dashboard h1 {
             font-size: 36px;
             font-weight: bold;
             margin-bottom: 10px;
         }
+
         .card-dashboard p {
             color: #6c757d;
             margin-bottom: 0;
         }
+
         .action-buttons .btn {
             margin: 0 3px;
         }
+
         .badge-pendiente {
             background-color: #ffc107;
             color: #000;
         }
+
         .badge-enviado {
             background-color: #17a2b8;
             color: #fff;
         }
+
         .badge-aprobada {
             background-color: #28a745;
             color: #fff;
         }
+
         .badge-rechazada {
             background-color: #dc3545;
             color: #fff;
         }
+
         .btn-action {
             padding: 5px 10px;
             font-size: 14px;
         }
+
         .header-button {
             border-radius: 5px;
             padding: 10px 15px;
@@ -59,41 +68,51 @@
             font-weight: 600;
             color: white;
         }
+
         .main-sidebar {
             background-color: #0d2042 !important;
         }
+
         .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active {
             background-color: rgba(255, 255, 255, 0.1);
         }
+
         .nav-icon {
             margin-right: 10px;
         }
+
         .admin-panel-header {
             background-color: #0d2042;
             color: white;
             padding: 20px;
             margin-bottom: 20px;
         }
+
         .dropdown-menu-lg {
             max-height: 300px;
             overflow-y: auto;
             min-width: 400px;
         }
+
         .dropdown-item-notification {
             padding: 10px 15px;
             border-bottom: 1px solid #e9ecef;
             cursor: pointer;
         }
+
         .dropdown-item-notification:hover {
             background-color: #f8f9fc;
         }
+
         .notification-unread {
             border-left: 3px solid #007bff;
             background-color: #f1f8ff;
         }
+
         .modal-content {
             border-radius: 10px;
         }
+
         .modal-header {
             background-color: #0d2042;
             color: white;
@@ -115,7 +134,7 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Home</a>
+                    <a href="{{ route('cefa.sibaf.index') }}" class="nav-link">Home</a>
                 </li>
                 @if(Auth::check())
                 @if(checkRol('sibaf.admin'))
@@ -175,25 +194,30 @@
                         </form>
                     </div>
                 </li>
-                <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Admin <i class="fas fa-user-circle"></i>
+                <li class="nav-item dropdown user-menu">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="d-none d-md-inline">{{ Auth::user()->nickname ?? 'Usuario' }}</span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                            Cerrar Sesión
-                        </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
-                    </div>
+                    <!-- Simplificado el menú de cerrar sesión, quitado color azul y hecho más pequeño -->
+                    <ul class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+
+                        <li class="user-footer text-center py-2">
+                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                @csrf
+                                <a href="#" onclick="this.closest('form').submit(); return false;" class="text-muted" style="text-decoration: none; font-size: 0.9rem;">
+                                    <i class="fas fa-sign-out-alt mr-1"></i> Cerrar Sesión
+                                </a>
+                            </form>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </nav>
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <a href="#" class="brand-link">
+            <a href="{{ route('cefa.sibaf.index') }}" class="brand-link">
+                <i class="nav-icon fas fa-shield-alt"></i>
                 <span class="brand-text font-weight-light ml-4">Admin Panel</span>
             </a>
 
@@ -222,6 +246,12 @@
                             <a href="{{ route('admin.sibaf.damage_reports_tracking.index') }}" class="nav-link {{ Route::is('admin.sibaf.damage_reports_tracking.index') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-clipboard-list"></i>
                                 <p>Seguimientos</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link">
+                                <i class="nav-icon fas fa-cog"></i>
+                                <p>Configuración</p>
                             </a>
                         </li>
                     </ul>
@@ -353,7 +383,7 @@
                                 timer: 1500
                             });
                             if (response.notification) {
-                                notifications.unshift(response.notification); // Agregar al inicio
+                                notifications.unshift(response.notification);
                                 updateNotificationDropdown();
                             }
                         }
@@ -376,7 +406,7 @@
                 $('#modalType').text(notification.type);
                 $('#modalEquipo').text(notification.equipo);
                 $('#modalCreadoPor').text(notification.usuario);
-                $('#modalAprobadoPor').text(notification.usuario); // Ajusta si tienes un campo diferente
+                $('#modalAprobadoPor').text(notification.usuario);
                 $('#modalMessage').text(notification.message);
                 $('#modalFecha').text(new Date(notification.created_at).toLocaleString());
                 $('#notificationModal').modal('show');
@@ -400,13 +430,13 @@
                 });
             });
 
-            // Obtener conteo de notificaciones no leídas (desactivado ya que no usamos tabla)
+            // Obtener conteo de notificaciones no leídas
             function updateUnreadCount() {
                 $('#unreadCount').text(notifications.filter(n => n.status === 'pending').length);
                 $('#notificationHeader').text(notifications.length > 0 ? `${notifications.length} Notificaciones` : 'Notificaciones');
             }
 
-            // Obtener notificaciones recientes (reemplazado por el array)
+            // Obtener notificaciones recientes
             function loadRecentNotifications() {
                 updateNotificationDropdown();
             }
@@ -414,87 +444,6 @@
             // Actualizar notificaciones y conteo al cargar la página
             updateUnreadCount();
             loadRecentNotifications();
-
-            // Manejar "Marcar como leída" con depuración (desactivado ya que usamos el botón)
-            /* $(document).on('submit', '.mark-read-form', function(e) {
-                e.preventDefault();
-                let form = $(this);
-                let notificationId = form.data('id');
-                let url = form.attr('action').replace(':id', notificationId);
-                console.log('Enviando solicitud a:', url);
-
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: form.serialize(),
-                    success: function(response) {
-                        console.log('Respuesta del servidor:', response);
-                        if (response.success) {
-                            updateUnreadCount();
-                            loadRecentNotifications();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Notificación marcada como leída',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error al marcar como leída',
-                                text: response.message || 'Intenta de nuevo',
-                                showConfirmButton: true
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        console.log('Error AJAX:', xhr.responseText);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error al marcar como leída',
-                            text: xhr.responseJSON?.message || 'Revisa la conexión o permisos',
-                            showConfirmButton: true
-                        });
-                    }
-                });
-            }); */
-
-            // Manejar "Marcar todas como leídas" (desactivado ya que usamos el array)
-            /* $('#markAllRead').on('click', function(e) {
-                e.preventDefault();
-                let form = $(this).closest('form');
-                $.ajax({
-                    url: form.attr('action'),
-                    method: 'POST',
-                    data: form.serialize(),
-                    success: function(response) {
-                        if (response.success) {
-                            updateUnreadCount();
-                            loadRecentNotifications();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Todas las notificaciones marcadas como leídas',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                        }
-                    },
-                    error: function() {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error al marcar todas como leídas',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
-                });
-            }); */
-
-            // Actualizar notificaciones cada 60 segundos (desactivado ya que se manejan en tiempo real)
-            /* setInterval(() => {
-                updateUnreadCount();
-                loadRecentNotifications();
-            }, 60000); */
         });
     </script>
 </body>

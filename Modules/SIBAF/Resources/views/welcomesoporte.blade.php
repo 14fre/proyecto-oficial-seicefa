@@ -190,9 +190,9 @@
                                                                 </button>
                                                             @elseif($estado === 'En arreglo')
                                                                 <!-- Botón Marcar como Reparado -->
-                                                                <form action="{{ route('sibaf.support.damage_reports.complete', $report->id) }}" method="POST" style="display:inline-block;">
+                                                                <form id="completeForm{{ $report->id }}" action="{{ route('sibaf.support.damage_reports.complete', $report->id) }}" method="POST" style="display:inline-block;">
                                                                     @csrf
-                                                                    <button type="submit" class="btn btn-sm btn-outline-primary" onclick="return confirm('¿Marcar este equipo como reparado?')" title="Marcar como Reparado">
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="confirmComplete({{ $report->id }})" title="Marcar como Reparado">
                                                                         <i class="fas fa-wrench"></i>
                                                                     </button>
                                                                 </form>
@@ -473,25 +473,64 @@
     }
 
     function submitForm(action, reportId) {
+        let title = '';
+        let text = '';
+        let formId = action + 'Form' + reportId;
+
         if (action === 'arreglo') {
             if (document.getElementById('arregloReason' + reportId).value.trim() === '') {
                 Swal.fire('Error', 'Por favor, ingrese la razón o detalle del arreglo.', 'error');
                 return;
             }
-            document.getElementById('arregloForm' + reportId).submit();
+            title = 'Confirmar Arreglo';
+            text = '¿Está seguro de aprobar este reporte para arreglo?';
         } else if (action === 'rechazo') {
             if (document.getElementById('rechazoReason' + reportId).value.trim() === '') {
                 Swal.fire('Error', 'Por favor, ingrese la razón del rechazo.', 'error');
                 return;
             }
-            document.getElementById('rechazoForm' + reportId).submit();
+            title = 'Confirmar Rechazo';
+            text = '¿Está seguro de rechazar este reporte?';
         } else if (action === 'baja') {
             if (!document.getElementById('excel1_' + reportId).files.length || !document.getElementById('excel2_' + reportId).files.length) {
                 Swal.fire('Error', 'Por favor, suba ambos archivos de baja.', 'error');
                 return;
             }
-            document.getElementById('bajaForm' + reportId).submit();
+            title = 'Confirmar Baja';
+            text = '¿Está seguro de aprobar este reporte para baja?';
         }
+
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, confirmar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(formId).submit();
+            }
+        });
+    }
+
+    function confirmComplete(reportId) {
+        Swal.fire({
+            title: 'Confirmar Reparación',
+            text: '¿Marcar este equipo como reparado?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, marcar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('completeForm' + reportId).submit();
+            }
+        });
     }
 </script>
 @endsection

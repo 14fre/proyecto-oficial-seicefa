@@ -58,48 +58,7 @@
     <!-- Main Content Grid -->
     <div class="content-grid">
         <!-- Notifications Section -->
-        <div class="content-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fas fa-bell"></i>
-                    <span>Notificaciones Recientes</span>
-                </div>
-                <a href="{{ route('sibaf.admin.notifications') }}" class="btn-primary-small">Ver todas</a>
-            </div>
-            <div class="card-body">
-                @if(isset($notifications) && $notifications->count() > 0)
-                    @foreach($notifications->take(5) as $notification)
-                        <div class="notification-item">
-                            <div class="notification-header">
-                                <strong class="notification-title">Baja de Computador Aprobada</strong>
-                                <small class="notification-time">{{ $notification->created_at->diffForHumans() }}</small>
-                            </div>
-                            <p class="notification-description">
-                                Se ha aprobado la baja del computador 
-                                @if($notification->responsibleAllocation && $notification->responsibleAllocation->inventory)
-                                    <strong>{{ $notification->responsibleAllocation->inventory->element->name ?? 'No especificado' }}</strong>
-                                @else
-                                    <strong>No especificado</strong>
-                                @endif
-                            </p>
-                            <small class="notification-user">
-                                Usuario: 
-                                @if($notification->user)
-                                    {{ $notification->user->name ?? 'No especificado' }}
-                                @else
-                                    No especificado
-                                @endif
-                            </small>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="empty-state">
-                        <i class="fas fa-bell-slash"></i>
-                        <p>No hay notificaciones nuevas</p>
-                    </div>
-                @endif
-            </div>
-        </div>
+    
 
         <!-- Pending Reports Section -->
         <div class="content-card">

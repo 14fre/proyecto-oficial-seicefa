@@ -31,6 +31,9 @@
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
+                <a href="{{ route('cefa.sibaf.index') }}" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
                 <a href="#" class="nav-link">Panel de Instructor</a>
             </li>
         </ul>
@@ -87,13 +90,7 @@
                 </a>
                 <!-- Simplificado el menú de cerrar sesión, quitado color azul y hecho más pequeño -->
                 <ul class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
-                    <li class="user-header text-center py-2" style="background: #f8f9fa; border-bottom: 1px solid #dee2e6;">
-                        <i class="fas fa-user-circle text-muted" style="font-size: 2rem;"></i>
-                        <p class="mt-1 mb-0 text-dark">
-                            {{ Auth::user()->nickname ?? 'Usuario' }}
-                            <small class="text-muted">Instructor</small>
-                        </p>
-                    </li>
+         
                     <li class="user-footer text-center py-2">
                         <form action="{{ route('logout') }}" method="POST" class="d-inline">
                             @csrf
