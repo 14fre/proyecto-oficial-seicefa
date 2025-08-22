@@ -32,24 +32,24 @@ class SIBAFController extends Controller
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
-        
+
         // Obtener reportes de daño pendientes
         $pendingReports = \Modules\SIBAF\Entities\DamageReport::with(['inventory.element', 'user.person'])
             ->where('state', 'Solicitado')
             ->get();
-            
+
         // Obtener bajas aprobadas recientes
         $recentDowngrades = \Modules\SIBAF\Entities\ComputerDowngrade::with(['inventory.element', 'user.person'])
             ->orderBy('created_at', 'desc')
             ->take(10)
             ->get();
-            
+
         // Contadores
         $totalPendingReports = \Modules\SIBAF\Entities\DamageReport::where('state', 'Solicitado')->count();
         $totalApprovedDowngrades = \Modules\SIBAF\Entities\ComputerDowngrade::count();
         $totalReports = \Modules\SIBAF\Entities\DamageReport::count();
         $notificationsCount = \Modules\SIBAF\Entities\Notification::where('statusNotification', 'pending')->count();
-        
+
         return view('sibaf::welcome', compact(
             'notifications',
             'pendingReports',
@@ -60,7 +60,7 @@ class SIBAFController extends Controller
             'notificationsCount'
         ));
     }
-    
+
     public function soporte()
     {
         return view('sibaf::welcomesoporte');
@@ -69,11 +69,11 @@ class SIBAFController extends Controller
     public function supportPanel(Request $request)
     {
         $damageReports = \Modules\SIBAF\Entities\DamageReport::with(['inventory', 'user', 'movement'])
-            ->whereHas('movement', function($q) {
+            ->whereHas('movement', function ($q) {
                 $q->where('state', 'Solicitado');
             })
             ->get();
-        
+
         // Obtener el reporte pasado desde la redirección (si existe)
         $report = $request->session()->get('report');
 
@@ -153,14 +153,14 @@ class SIBAFController extends Controller
     {
         //
     }
-    
+    // Método para descargar archivos Excel asociados a una baja de equipo
     public function downloadExcel($downgradeId, $fileType)
     {
         $downgrade = \Modules\SIBAF\Entities\ComputerDowngrade::findOrFail($downgradeId);
-        
+
         $filePath = null;
         $fileName = null;
-        
+
         if ($fileType === 'excel1') {
             $filePath = $downgrade->excel1_path;
             $fileName = 'excel1_baja_' . $downgrade->id . '.xlsx';
@@ -168,20 +168,20 @@ class SIBAFController extends Controller
             $filePath = $downgrade->excel2_path;
             $fileName = 'excel2_baja_' . $downgrade->id . '.xlsx';
         }
-        
+
         if (!$filePath || !\Illuminate\Support\Facades\Storage::disk('public')->exists($filePath)) {
             return redirect()->back()->with('error', 'Archivo no encontrado');
         }
-        
+
         return \Illuminate\Support\Facades\Storage::disk('public')->download($filePath, $fileName);
     }
-    
+    // Método para mostrar la lista de bajas de equipos
     public function downgrades()
     {
         $downgrades = \Modules\SIBAF\Entities\ComputerDowngrade::with(['inventory.element', 'user.person'])
             ->orderBy('created_at', 'desc')
             ->paginate(20);
-            
+
         return view('sibaf::downgrades', compact('downgrades'));
     }
 }
