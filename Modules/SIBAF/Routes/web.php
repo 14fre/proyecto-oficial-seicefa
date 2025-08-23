@@ -6,6 +6,7 @@ use Modules\SIBAF\Http\Controllers\Admin\InventoryController;
 use Modules\SIBAF\Http\Controllers\Admin\DamageReportController;
 use Modules\SIBAF\Http\Controllers\Admin\NotificationController;
 use Modules\SIBAF\Http\Controllers\SIBAFController;
+use Modules\SIBAF\Http\Controllers\ManualController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +68,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/downgrades', [SIBAFController::class, 'downgrades'])->name('downgrades');
         Route::get('/downgrades/{downgrade}/download/{fileType}', [SIBAFController::class, 'downloadExcel'])->name('downgrades.download');
     });
+
+    // Rutas para descarga de manuales
+    Route::get('/manual/download/{role?}', [ManualController::class, 'download'])->name('sibaf.manual.download');
 });
 
 // Rutas públicas

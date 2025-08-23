@@ -137,7 +137,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="#" class="nav-link" data-toggle="modal" data-target="#configModal">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Configuración</p>
                         </a>
@@ -151,6 +151,67 @@
         <section class="content">
             <div class="container-fluid">
                 @yield('content')
+                
+                <!-- Dashboard Simple del Instructor - Solo se muestra en Panel Principal -->
+                @if(Route::is('sibaf.instructor.masterinstructor'))
+                <div class="row justify-content-center">
+                    <div class="col-md-10">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center py-4">
+                                <div class="mb-3">
+                                    <i class="fas fa-chalkboard-teacher fa-3x" style="color: #1a365d;"></i>
+                                </div>
+                                <h2 class="text-dark mb-2">Bienvenido al Sistema SIBAF</h2>
+                                <p class="text-muted mb-4" style="font-size: 1.1rem;">
+                                    Sistema de Inventario y Baja de Equipos de Formación
+                                </p>
+                                
+                                <!-- Información del Sistema -->
+                                <div class="row mt-4">
+                                     <div class="col-md-4">
+                                         <div class="text-center p-3">
+                                             <i class="fas fa-file-alt fa-2x text-primary mb-2"></i>
+                                             <h4 class="text-dark">Reportes</h4>
+                                             <p class="text-muted">Registro de reportes</p>
+                                         </div>
+                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center p-3">
+                                            <i class="fas fa-user-tie fa-2x text-success mb-2"></i>
+                                                                                         <h4 class="text-dark">Usuario</h4>
+                                             <p class="text-muted">{{ Auth::user()->nickname ?? 'Instructor' }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center p-3">
+                                            <i class="fas fa-calendar-alt fa-2x text-info mb-2"></i>
+                                                                                         <h4 class="text-dark">Fecha</h4>
+                                             <p class="text-muted">{{ date('d/m/Y') }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Información del Equipo -->
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="alert alert-light border">
+                                                                                         <h5 class="text-dark mb-2">
+                                                 <i class="fas fa-info-circle text-info mr-2"></i>
+                                                 Información del Proyecto
+                                             </h5>
+                                             <p class="text-muted mb-0">
+                                                Este sistema permite gestionar el inventario de equipos tecnológicos, 
+                                                realizar reportes de daños y controlar el proceso de bajas de equipos 
+                                                en el centro de formación.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </section>
     </div>
@@ -162,6 +223,9 @@
 
     <aside class="control-sidebar control-sidebar-dark"></aside>
 </div>
+
+<!-- Incluir el modal de configuración -->
+@include('sibaf::config.modal')
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>

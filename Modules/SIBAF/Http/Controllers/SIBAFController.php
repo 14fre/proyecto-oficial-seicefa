@@ -14,7 +14,7 @@ class SIBAFController extends Controller
      */
     public function index()
     {
-        return view('sibaf::index');
+        return view('sibaf::admin.index');
         return view('sibaf::inventories');
         return view('sibaf::equipment_tracking');
     }
@@ -50,7 +50,7 @@ class SIBAFController extends Controller
         $totalReports = \Modules\SIBAF\Entities\DamageReport::count();
         $notificationsCount = \Modules\SIBAF\Entities\Notification::where('statusNotification', 'pending')->count();
 
-        return view('sibaf::welcome', compact(
+        return view('sibaf::admin.welcome', compact(
             'notifications',
             'pendingReports',
             'recentDowngrades',
@@ -85,12 +85,12 @@ class SIBAFController extends Controller
                 ->first();
         }
 
-        return view('sibaf::welcomesoporte', compact('damageReports', 'report'));
+        return view('sibaf::soporte.welcomesoporte', compact('damageReports', 'report'));
     }
 
     public function instructor()
     {
-        return view('sibaf::masterinstructor');
+        return view('sibaf::layouts.masterinstructor');
         return view('sibaf::inventoriesINS');
     }
 
@@ -182,6 +182,6 @@ class SIBAFController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('sibaf::downgrades', compact('downgrades'));
+        return view('sibaf::admin.downgrades', compact('downgrades'));
     }
 }

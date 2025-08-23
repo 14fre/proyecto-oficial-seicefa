@@ -39,7 +39,7 @@ class InventoryController extends Controller
         $warehouses = SICAWarehouse::all();
 
         // Devuelve la vista 'inventories' con los datos compactados para su renderizado
-        return view('sibaf::inventories', compact(
+        return view('sibaf::admin.inventories', compact(
             'inventories',
             'warehouses',
             'serialNumber',
@@ -73,7 +73,7 @@ class InventoryController extends Controller
         $rejectionReason = $request->session()->get('rejection_reason');
 
         // Devuelve la vista 'equipment_tracking' con los datos compactados para su renderizado
-        return view('sibaf::equipment_tracking', compact(
+        return view('sibaf::admin.equipment_tracking', compact(
             'equipos',
             'warehouses',
             'serialNumber',

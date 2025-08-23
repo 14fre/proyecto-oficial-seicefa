@@ -39,6 +39,6 @@ class EquipmentTrackingController extends Controller
         $approvalReason = $request->session()->get('approval_reason');
         $rejectionReason = $request->session()->get('rejection_reason');
 
-        return view('sibaf::equipment_tracking', compact('damageReportsWithRelations', 'approvalReason', 'rejectionReason'));
+        return view('sibaf::admin.equipment_tracking', compact('damageReportsWithRelations', 'approvalReason', 'rejectionReason'));
     }
 }

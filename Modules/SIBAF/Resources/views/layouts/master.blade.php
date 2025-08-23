@@ -249,7 +249,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#configModal">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>Configuración</p>
                             </a>
@@ -281,6 +281,9 @@
                 <b>Version</b> 3.2.0
             </div>
         </footer>
+
+        <!-- Incluir el modal de configuración -->
+        @include('sibaf::config.modal')
     </div>
 
     <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">

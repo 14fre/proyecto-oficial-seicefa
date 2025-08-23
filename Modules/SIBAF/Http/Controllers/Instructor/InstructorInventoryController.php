@@ -28,7 +28,7 @@ class InstructorInventoryController extends Controller
 
         $warehouses = SICAWarehouse::all();
 
-        return view('sibaf::inventories', compact(
+        return view('sibaf::admin.inventories', compact(
             'inventories',
             'warehouses',
             'serialNumber',

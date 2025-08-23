@@ -296,7 +296,7 @@
             </li>
 
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="#" class="nav-link" data-toggle="modal" data-target="#configModal">
                 <i class="nav-icon fas fa-cog"></i>
                 <p>Configuración</p>
               </a>
@@ -423,6 +423,9 @@
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark"></aside>
   </div>
+
+  <!-- Incluir el modal de configuración -->
+  @include('sibaf::config.modal')
 
   <!-- jQuery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
